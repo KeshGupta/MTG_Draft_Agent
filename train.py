@@ -21,8 +21,9 @@ from NN import ContextualDraftScorer, DraftScorer
 
 # ---- config: edit these, then run `python train.py` -------------------------
 ROOT = Path(__file__).resolve().parent
-DATA_DIR = ROOT / "data" / "cleaned_copy"
+DATA_DIR = ROOT / "data" / "cleaned"
 CARD_DATA = ROOT / "data" / "raw" / "SOS_cards.json"
+EXTRA_CARD_DATA = ROOT / "data" / "raw" / "SOS_extra_cards.json"
 OUTPUT_DIR = ROOT / "models"
 TOP1_PLOT = OUTPUT_DIR / "top1_over_epochs.png"
 
@@ -94,7 +95,7 @@ class Metrics:
 
 def config_dict() -> dict[str, Any]:
     keys = [
-        "DATA_DIR", "CARD_DATA", "OUTPUT_DIR", "MODEL", "EPOCHS", "BATCH_SIZE", "LR",
+        "DATA_DIR", "CARD_DATA", "EXTRA_CARD_DATA", "OUTPUT_DIR", "MODEL", "EPOCHS", "BATCH_SIZE", "LR",
         "WEIGHT_DECAY", "LABEL_SMOOTHING", "VAL_FRACTION", "SEED", "EMB_DIM",
         "HIDDEN_DIM", "SYNERGY_DIM", "DROPOUT", "GRAD_CLIP", "DEVICE", "NUM_THREADS",
         "USE_AMP", "COMPILE", "RESUME", "LIMIT_CHUNKS", "MAX_STEPS_PER_EPOCH",
@@ -130,11 +131,16 @@ def build_card_features(card_names: list[str]) -> tuple[torch.Tensor, list[str],
         return torch.empty(len(card_names), 0), [], {"matched": 0, "missing": len(card_names)}
 
     lookup: dict[str, dict[str, Any]] = {}
-    for card in load_json(CARD_DATA):
-        if name := card.get("name"):
-            lookup.setdefault(name, card)
-            for part in name.split(" // "):
-                lookup.setdefault(part, card)
+    card_files = [CARD_DATA]
+    if EXTRA_CARD_DATA.exists():
+        card_files.append(EXTRA_CARD_DATA)
+
+    for card_file in card_files:
+        for card in load_json(card_file):
+            if name := card.get("name"):
+                lookup.setdefault(name, card)
+                for part in name.split(" // "):
+                    lookup.setdefault(part, card)
 
     colors = ["W", "U", "B", "R", "G"]
     types = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker", "Battle"]
