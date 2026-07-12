@@ -3,40 +3,58 @@ from torch import nn
 
 
 class DraftScorer(nn.Module):
-    def __init__(self, num_cards, emb_dim=64):
+    """Fast multi-output baseline using the one-hot/count draft state directly."""
+
+    def __init__(
+        self,
+        num_cards,
+        emb_dim=128,
+        hidden_dim=256,
+        dropout=0.15,
+        max_packs=3,
+        max_picks=14,
+        **_,
+    ):
         super().__init__()
-        self.card_emb = nn.Embedding(num_cards, emb_dim)
+        self.num_cards = num_cards
+        self.max_packs = max_packs
+        self.max_picks = max_picks
 
-        # turns the summed pool embedding into a pool "state" vector
-        self.pool_mlp = nn.Sequential(
-            nn.Linear(emb_dim, emb_dim),
-            nn.ReLU(),
+        self.net = nn.Sequential(
+            nn.LayerNorm(num_cards * 2 + 4),
+            nn.Linear(num_cards * 2 + 4, hidden_dim),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, num_cards),
         )
 
-        # scores one candidate card given the pool state
-        self.scorer = nn.Sequential(
-            nn.Linear(emb_dim * 3, 128),
-            nn.ReLU(),
-            nn.Dropout(0.3),
-            nn.Linear(128, 1),
+    def forward(self, pool_counts, pack_counts, pack_numbers=None, pick_numbers=None):
+        pool_counts = pool_counts.float()
+        pack_counts = pack_counts.float()
+        pack_mask = pack_counts > 0
+
+        batch_size = pool_counts.shape[0]
+        device = pool_counts.device
+        if pack_numbers is None:
+            pack_numbers = torch.zeros(batch_size, device=device)
+        if pick_numbers is None:
+            pick_numbers = torch.zeros(batch_size, device=device)
+
+        stage = torch.stack(
+            [
+                pack_numbers.float() / max(self.max_packs - 1, 1),
+                pick_numbers.float() / max(self.max_picks - 1, 1),
+                pool_counts.sum(1) / 42.0,
+                pack_counts.sum(1) / 14.0,
+            ],
+            dim=1,
         )
 
-    def forward(self, pool_counts, pack_mask):
-        # pool_counts: (B, C) float counts of cards already drafted
-        # pack_mask:   (B, C) bool, True where a card is available in the pack
-        all_emb = self.card_emb.weight                 # (C, emb_dim)
-
-        # pool state = weighted sum of drafted-card embeddings
-        pool_vec = pool_counts @ all_emb               # (B, emb_dim)
-        pool_vec = self.pool_mlp(pool_vec)             # (B, emb_dim)
-
-        B, C = pack_mask.shape
-        cand = all_emb.unsqueeze(0).expand(B, C, -1)   # (B, C, emb_dim)
-        pv   = pool_vec.unsqueeze(1).expand(B, C, -1)  # (B, C, emb_dim)
-        feats = torch.cat([cand, pv, cand * pv], dim=-1)  # (B, C, 3*emb_dim)
-
-        scores = self.scorer(feats).squeeze(-1)        # (B, C)
-        return scores.masked_fill(~pack_mask, -1e9)
+        logits = self.net(torch.cat([pool_counts, pack_counts, stage], dim=1))
+        return logits.masked_fill(~pack_mask, -1e9)
 
 
 class _ResidualBlock(nn.Module):

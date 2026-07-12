@@ -21,13 +21,13 @@ from NN import ContextualDraftScorer, DraftScorer
 
 # ---- config: edit these, then run `python train.py` -------------------------
 ROOT = Path(__file__).resolve().parent
-DATA_DIR = ROOT / "data" / "cleaned"
+DATA_DIR = ROOT / "data" / "cleaned_copy"
 CARD_DATA = ROOT / "data" / "raw" / "SOS_cards.json"
 OUTPUT_DIR = ROOT / "models"
 TOP1_PLOT = OUTPUT_DIR / "top1_over_epochs.png"
 
 MODEL = "contextual"          # "contextual" or "draftscorer"
-EPOCHS = 8
+EPOCHS = 20
 BATCH_SIZE = 2048
 LR = 2e-3
 WEIGHT_DECAY = 1e-4
@@ -247,7 +247,7 @@ def unpack(x: np.ndarray, y: np.ndarray, cards: int, device: torch.device) -> tu
 
 
 def logits_for(model: nn.Module, pool: torch.Tensor, pack: torch.Tensor, pack_no: torch.Tensor, pick_no: torch.Tensor) -> torch.Tensor:
-    return model(pool, pack > 0) if MODEL == "draftscorer" else model(pool, pack, pack_no, pick_no)
+    return model(pool, pack, pack_no, pick_no)
 
 
 def masked_cross_entropy(logits: torch.Tensor, targets: torch.Tensor, mask: torch.Tensor, smoothing: float, choice_weighting: bool) -> torch.Tensor:
@@ -320,7 +320,12 @@ def run_epoch(
 
 def make_model(cards: int, features: torch.Tensor) -> tuple[nn.Module, dict[str, Any]]:
     if MODEL == "draftscorer":
-        kwargs = {"num_cards": cards, "emb_dim": EMB_DIM}
+        kwargs = {
+            "num_cards": cards,
+            "emb_dim": EMB_DIM,
+            "hidden_dim": HIDDEN_DIM,
+            "dropout": DROPOUT,
+        }
         return DraftScorer(**kwargs), kwargs
     kwargs = {
         "num_cards": cards,
