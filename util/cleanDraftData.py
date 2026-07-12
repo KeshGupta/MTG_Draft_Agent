@@ -19,10 +19,11 @@ import numpy as np
 import pandas as pd
 
 
-DEFAULT_INPUT = Path("data/draft_data_public.SOS.PremierDraft.csv")
+DEFAULT_INPUT = Path("MTG_Draft_Agent/data/raw/draft_data_public.SOS.PremierDraft.csv")
 DEFAULT_OUTPUT_DIR = Path("data/cleaned")
 PACK_PREFIX = "pack_card_"
 POOL_PREFIX = "pool_"
+
 
 
 def read_columns(csv_path: Path) -> list[str]:
@@ -40,7 +41,8 @@ def get_feature_columns(columns: list[str]) -> list[str]:
 
 
 def validate_columns(columns: list[str], card_names: list[str], feature_columns: list[str]) -> None:
-    missing = [column for column in ["pack_number", "pick_number", "pick"] if column not in columns]
+    required_columns = ["pack_number", "pick_number", "pick", "event_match_wins"]
+    missing = [column for column in required_columns if column not in columns]
     if missing:
         raise ValueError(f"Missing required column(s): {', '.join(missing)}")
 
@@ -107,18 +109,29 @@ def clean_draft_data(
     validate_columns(columns, card_names, feature_columns)
 
     card_to_index = {card_name: index for index, card_name in enumerate(card_names)}
-    usecols = [*feature_columns, "pick"]
+    usecols = [*feature_columns, "pick", "event_match_wins"]
     output_dir.mkdir(parents=True, exist_ok=True)
 
     rows_written = 0
     chunks_written = 0
 
-    for chunk in pd.read_csv(csv_path, usecols=usecols, chunksize=chunksize):
+    DATA = pd.read_csv(csv_path, usecols=usecols, chunksize=chunksize)
+
+    for chunk in DATA:
+        chunk = pd.DataFrame(chunk)
+        chunk = chunk[chunk["event_match_wins"] > 5]
+
+        if chunk.empty:
+            continue
+
         if limit_rows is not None:
             remaining = limit_rows - rows_written
             if remaining <= 0:
                 break
             chunk = chunk.head(remaining)
+
+        if chunk.empty:
+            continue
 
         rows_written += save_chunk(
             chunk=chunk,
@@ -129,17 +142,6 @@ def clean_draft_data(
         )
         chunks_written += 1
         print(f"Wrote chunk {chunks_written} ({rows_written:,} total rows)")
-
-    metadata = make_metadata(
-        csv_path=csv_path,
-        feature_columns=feature_columns,
-        card_names=card_names,
-        rows_written=rows_written,
-        chunks_written=chunks_written,
-    )
-    metadata_path = output_dir / "metadata.json"
-    metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
-    print(f"Wrote metadata to {metadata_path}")
 
 
 def parse_args() -> argparse.Namespace:

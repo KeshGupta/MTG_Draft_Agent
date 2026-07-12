@@ -6,4 +6,5 @@ __pycache__/
 
 data/raw/
 data/cleaned/
+data/cleaned_copy/
 models/*.pt

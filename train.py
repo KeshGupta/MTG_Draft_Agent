@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
-"""Train a draft-pick model from cleaned 17Lands-style pick chunks.
-
-The training target is the human pick among the cards currently in the pack.
-Rows are streamed from compressed chunks so the full 4.5M-row dataset never has
-to be concatenated in memory.
-"""
+"""Train a draft-pick model from cleaned 17Lands-style pick chunks."""
 
 from __future__ import annotations
 
-import argparse
 import json
 import math
 import random
@@ -25,527 +19,336 @@ from torch import nn
 from NN import ContextualDraftScorer, DraftScorer
 
 
-PROJECT_DIR = Path(__file__).resolve().parent
-DEFAULT_DATA_DIR = PROJECT_DIR / "data" / "cleaned"
-DEFAULT_CARD_DATA = PROJECT_DIR / "data" / "raw" / "SOS_cards.json"
-DEFAULT_OUTPUT_DIR = PROJECT_DIR / "models"
+# ---- config: edit these, then run `python train.py` -------------------------
+ROOT = Path(__file__).resolve().parent
+DATA_DIR = ROOT / "data" / "cleaned"
+CARD_DATA = ROOT / "data" / "raw" / "SOS_cards.json"
+OUTPUT_DIR = ROOT / "models"
+TOP1_PLOT = OUTPUT_DIR / "top1_over_epochs.png"
+
+MODEL = "contextual"          # "contextual" or "draftscorer"
+EPOCHS = 8
+BATCH_SIZE = 2048
+LR = 2e-3
+WEIGHT_DECAY = 1e-4
+LABEL_SMOOTHING = 0.02
+VAL_FRACTION = 0.08
+SEED = 42
+
+EMB_DIM = 128
+HIDDEN_DIM = 256
+SYNERGY_DIM = 64
+DROPOUT = 0.15
+GRAD_CLIP = 1.0
+
+DEVICE = "cuda"               # "auto", "cpu", "cuda", etc.
+NUM_THREADS = 0               # 0 keeps PyTorch default
+USE_AMP = False
+COMPILE = False
+RESUME: Path | None = None
+
+LIMIT_CHUNKS: int | None = None
+MAX_STEPS_PER_EPOCH: int | None = None
+MAX_VAL_BATCHES: int | None = None
+LOG_EVERY = 100
+SAVE_EVERY_EPOCH = False
+USE_CARD_FEATURES = True
+CHOICE_WEIGHTING = True
+
+QUICK = False                 # one short epoch on a few chunks
+QUICK_CHUNKS = 3
+QUICK_TRAIN_BATCHES = 20
+QUICK_VAL_BATCHES = 10
+# ----------------------------------------------------------------------------
 
 
-class MetricAccumulator:
+class Metrics:
     def __init__(self) -> None:
-        self.loss_sum = 0.0
-        self.samples = 0
-        self.correct = 0
-        self.top3_correct = 0
-        self.mrr_sum = 0.0
-        self.nontrivial_samples = 0
-        self.nontrivial_correct = 0
+        self.loss_sum = self.samples = self.correct = self.top3_correct = 0
+        self.mrr_sum = self.nontrivial_samples = self.nontrivial_correct = 0
 
-    def update(
-        self,
-        loss: torch.Tensor,
-        logits: torch.Tensor,
-        targets: torch.Tensor,
-        pack_mask: torch.Tensor,
-    ) -> None:
-        batch_size = targets.numel()
-        self.loss_sum += float(loss.detach().cpu()) * batch_size
-        self.samples += batch_size
+    def update(self, loss: torch.Tensor, logits: torch.Tensor, targets: torch.Tensor, mask: torch.Tensor) -> None:
+        n = targets.numel()
+        pred = logits.argmax(1)
+        target_logits = logits.gather(1, targets[:, None])
+        hard = mask.sum(1) > 1
 
-        predictions = logits.argmax(dim=1)
-        self.correct += int((predictions == targets).sum().detach().cpu())
-
-        topk = logits.topk(k=min(3, logits.shape[1]), dim=1).indices
-        self.top3_correct += int((topk == targets.unsqueeze(1)).any(dim=1).sum().detach().cpu())
-
-        target_logits = logits.gather(1, targets.unsqueeze(1))
-        ranks = (logits > target_logits).sum(dim=1).float() + 1.0
-        self.mrr_sum += float((1.0 / ranks).sum().detach().cpu())
-
-        legal_counts = pack_mask.sum(dim=1)
-        nontrivial = legal_counts > 1
-        if bool(nontrivial.any()):
-            self.nontrivial_samples += int(nontrivial.sum().detach().cpu())
-            self.nontrivial_correct += int((predictions[nontrivial] == targets[nontrivial]).sum().detach().cpu())
+        self.loss_sum += float(loss.detach().cpu()) * n
+        self.samples += n
+        self.correct += int((pred == targets).sum().detach().cpu())
+        self.top3_correct += int((logits.topk(min(3, logits.shape[1]), 1).indices == targets[:, None]).any(1).sum().cpu())
+        self.mrr_sum += float((1.0 / ((logits > target_logits).sum(1).float() + 1.0)).sum().detach().cpu())
+        self.nontrivial_samples += int(hard.sum().detach().cpu())
+        self.nontrivial_correct += int((pred[hard] == targets[hard]).sum().detach().cpu()) if bool(hard.any()) else 0
 
     def as_dict(self) -> dict[str, float]:
-        samples = max(self.samples, 1)
-        nontrivial_samples = max(self.nontrivial_samples, 1)
+        n, h = max(self.samples, 1), max(self.nontrivial_samples, 1)
         return {
-            "loss": self.loss_sum / samples,
-            "top1": self.correct / samples,
-            "top3": self.top3_correct / samples,
-            "mrr": self.mrr_sum / samples,
-            "nontrivial_top1": self.nontrivial_correct / nontrivial_samples,
+            "loss": self.loss_sum / n,
+            "top1": self.correct / n,
+            "top3": self.top3_correct / n,
+            "mrr": self.mrr_sum / n,
+            "nontrivial_top1": self.nontrivial_correct / h,
         }
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train an MTG draft pick neural network.")
-    parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR, help="Folder with draft_xy_chunk_*.npz files.")
-    parser.add_argument("--card-data", type=Path, default=DEFAULT_CARD_DATA, help="Optional Scryfall card JSON.")
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Where checkpoints are written.")
-    parser.add_argument("--model", choices=["contextual", "draftscorer"], default="contextual")
-    parser.add_argument("--epochs", type=int, default=8)
-    parser.add_argument("--batch-size", type=int, default=2048)
-    parser.add_argument("--lr", type=float, default=2e-3)
-    parser.add_argument("--weight-decay", type=float, default=1e-4)
-    parser.add_argument("--label-smoothing", type=float, default=0.02)
-    parser.add_argument("--val-fraction", type=float, default=0.08)
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--emb-dim", type=int, default=128)
-    parser.add_argument("--hidden-dim", type=int, default=256)
-    parser.add_argument("--synergy-dim", type=int, default=64)
-    parser.add_argument("--dropout", type=float, default=0.15)
-    parser.add_argument("--grad-clip", type=float, default=1.0)
-    parser.add_argument("--device", default="auto", help="auto, cpu, cuda, or another torch device string.")
-    parser.add_argument("--num-threads", type=int, default=0, help="CPU torch thread count. 0 keeps PyTorch default.")
-    parser.add_argument("--amp", action="store_true", help="Use CUDA automatic mixed precision.")
-    parser.add_argument("--compile", action="store_true", help="Use torch.compile when available.")
-    parser.add_argument("--resume", type=Path, default=None, help="Resume from a checkpoint.")
-    parser.add_argument("--limit-chunks", type=int, default=None, help="Use only the first N chunks.")
-    parser.add_argument("--max-steps-per-epoch", type=int, default=None, help="Cap train batches per epoch.")
-    parser.add_argument("--max-val-batches", type=int, default=None, help="Cap validation batches.")
-    parser.add_argument("--log-every", type=int, default=100)
-    parser.add_argument("--save-every-epoch", action="store_true")
-    parser.add_argument("--no-card-features", action="store_true", help="Do not use Scryfall metadata features.")
-    parser.add_argument("--no-choice-weighting", action="store_false", dest="choice_weighting")
-    parser.set_defaults(choice_weighting=True)
-    parser.add_argument(
-        "--quick",
-        action="store_true",
-        help="Smoke-test mode: one short epoch on a few chunks.",
-    )
-    return parser.parse_args()
+def config_dict() -> dict[str, Any]:
+    keys = [
+        "DATA_DIR", "CARD_DATA", "OUTPUT_DIR", "MODEL", "EPOCHS", "BATCH_SIZE", "LR",
+        "WEIGHT_DECAY", "LABEL_SMOOTHING", "VAL_FRACTION", "SEED", "EMB_DIM",
+        "HIDDEN_DIM", "SYNERGY_DIM", "DROPOUT", "GRAD_CLIP", "DEVICE", "NUM_THREADS",
+        "USE_AMP", "COMPILE", "RESUME", "LIMIT_CHUNKS", "MAX_STEPS_PER_EPOCH",
+        "MAX_VAL_BATCHES", "LOG_EVERY", "SAVE_EVERY_EPOCH", "USE_CARD_FEATURES",
+        "CHOICE_WEIGHTING", "QUICK", "QUICK_CHUNKS", "QUICK_TRAIN_BATCHES",
+        "QUICK_VAL_BATCHES", "TOP1_PLOT",
+    ]
+    return {key: str(value) if isinstance((value := globals()[key]), Path) else value for key in keys}
 
 
-def set_seed(seed: int) -> None:
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
+def seed_everything() -> None:
+    random.seed(SEED)
+    np.random.seed(SEED)
+    torch.manual_seed(SEED)
     if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed)
+        torch.cuda.manual_seed_all(SEED)
 
 
-def choose_device(requested: str) -> torch.device:
-    if requested != "auto":
-        return torch.device(requested)
-    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
-def load_metadata(data_dir: Path) -> dict[str, Any]:
-    metadata_path = data_dir / "metadata.json"
-    if not metadata_path.exists():
-        raise FileNotFoundError(f"Missing metadata: {metadata_path}")
-    with metadata_path.open("r", encoding="utf-8") as file:
-        metadata = json.load(file)
-    if "card_names" not in metadata:
-        raise ValueError("metadata.json must contain card_names.")
-    return metadata
-
-
-def find_chunks(data_dir: Path, limit_chunks: int | None) -> list[Path]:
-    chunks = sorted(data_dir.glob("draft_xy_chunk_*.npz"))
-    if not chunks:
-        raise FileNotFoundError(f"No draft_xy_chunk_*.npz files found in {data_dir}")
-    if limit_chunks is not None:
-        chunks = chunks[:limit_chunks]
-    return chunks
+def load_json(path: Path) -> Any:
+    with path.open("r", encoding="utf-8") as file:
+        return json.load(file)
 
 
 def parse_number(value: Any) -> float:
-    if value is None:
-        return 0.0
     try:
-        return float(value)
+        return 0.0 if value is None else float(value)
     except (TypeError, ValueError):
         return 0.0
 
 
-def build_card_lookup(card_data_path: Path) -> dict[str, dict[str, Any]]:
-    with card_data_path.open("r", encoding="utf-8") as file:
-        cards = json.load(file)
-
-    lookup: dict[str, dict[str, Any]] = {}
-    for card in cards:
-        name = card.get("name")
-        if not name:
-            continue
-        lookup.setdefault(name, card)
-        for part in name.split(" // "):
-            lookup.setdefault(part, card)
-    return lookup
-
-
-def build_card_features(
-    card_names: list[str],
-    card_data_path: Path,
-    use_card_features: bool,
-) -> tuple[torch.Tensor, list[str], dict[str, int]]:
-    if not use_card_features or not card_data_path.exists():
+def build_card_features(card_names: list[str]) -> tuple[torch.Tensor, list[str], dict[str, int]]:
+    if not USE_CARD_FEATURES or not CARD_DATA.exists():
         return torch.empty(len(card_names), 0), [], {"matched": 0, "missing": len(card_names)}
 
-    lookup = build_card_lookup(card_data_path)
-    colors = ["W", "U", "B", "R", "G"]
-    type_flags = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker", "Battle"]
-    rarity_flags = ["common", "uncommon", "rare", "mythic"]
-    keyword_flags = [
-        "Flying",
-        "Trample",
-        "Vigilance",
-        "Haste",
-        "Reach",
-        "Deathtouch",
-        "Lifelink",
-        "Menace",
-        "Ward",
-        "Prowess",
-        "Flash",
-        "First strike",
-        "Double strike",
-        "Converge",
-    ]
+    lookup: dict[str, dict[str, Any]] = {}
+    for card in load_json(CARD_DATA):
+        if name := card.get("name"):
+            lookup.setdefault(name, card)
+            for part in name.split(" // "):
+                lookup.setdefault(part, card)
 
+    colors = ["W", "U", "B", "R", "G"]
+    types = ["Creature", "Instant", "Sorcery", "Artifact", "Enchantment", "Land", "Planeswalker", "Battle"]
+    rarities = ["common", "uncommon", "rare", "mythic"]
+    keywords = [
+        "Flying", "Trample", "Vigilance", "Haste", "Reach", "Deathtouch", "Lifelink",
+        "Menace", "Ward", "Prowess", "Flash", "First strike", "Double strike", "Converge",
+    ]
     feature_names = (
-        [f"color_{color}" for color in colors]
+        [f"color_{c}" for c in colors]
         + ["is_colorless", "is_multicolor"]
-        + [f"type_{type_name.lower()}" for type_name in type_flags]
-        + [f"rarity_{rarity}" for rarity in rarity_flags]
-        + [f"keyword_{keyword.lower().replace(' ', '_')}" for keyword in keyword_flags]
-        + ["cmc_scaled", "power_scaled", "toughness_scaled", "oracle_len_scaled", "keyword_count_scaled"]
-        + ["metadata_missing"]
+        + [f"type_{t.lower()}" for t in types]
+        + [f"rarity_{r}" for r in rarities]
+        + [f"keyword_{k.lower().replace(' ', '_')}" for k in keywords]
+        + ["cmc_scaled", "power_scaled", "toughness_scaled", "oracle_len_scaled", "keyword_count_scaled", "metadata_missing"]
     )
 
-    rows: list[list[float]] = []
-    matched = 0
+    rows, matched = [], 0
     for card_name in card_names:
-        card = lookup.get(card_name)
-        missing = card is None
-        if missing:
-            card = {}
-        else:
-            matched += 1
-
+        card = lookup.get(card_name) or {}
+        missing = not card
+        matched += 0 if missing else 1
         card_colors = set(card.get("colors") or [])
+        card_keywords = set(card.get("keywords") or [])
+        oracle = card.get("oracle_text") or ""
         type_line = card.get("type_line") or ""
-        rarity = card.get("rarity") or ""
-        keywords = set(card.get("keywords") or [])
-        oracle_text = card.get("oracle_text") or ""
 
-        row: list[float] = []
-        row.extend(1.0 if color in card_colors else 0.0 for color in colors)
-        row.append(1.0 if not card_colors and not missing else 0.0)
-        row.append(1.0 if len(card_colors) > 1 else 0.0)
-        row.extend(1.0 if type_name in type_line else 0.0 for type_name in type_flags)
-        row.extend(1.0 if rarity == rarity_name else 0.0 for rarity_name in rarity_flags)
-        row.extend(1.0 if keyword in keywords else 0.0 for keyword in keyword_flags)
-        row.append(min(parse_number(card.get("cmc")), 12.0) / 12.0)
-        row.append(min(parse_number(card.get("power")), 12.0) / 12.0)
-        row.append(min(parse_number(card.get("toughness")), 12.0) / 12.0)
-        row.append(min(len(oracle_text), 500) / 500.0)
-        row.append(min(len(keywords), 8) / 8.0)
-        row.append(1.0 if missing else 0.0)
-        rows.append(row)
+        rows.append(
+            [float(c in card_colors) for c in colors]
+            + [float(not card_colors and not missing), float(len(card_colors) > 1)]
+            + [float(t in type_line) for t in types]
+            + [float(card.get("rarity") == r) for r in rarities]
+            + [float(k in card_keywords) for k in keywords]
+            + [
+                min(parse_number(card.get("cmc")), 12.0) / 12.0,
+                min(parse_number(card.get("power")), 12.0) / 12.0,
+                min(parse_number(card.get("toughness")), 12.0) / 12.0,
+                min(len(oracle), 500) / 500.0,
+                min(len(card_keywords), 8) / 8.0,
+                float(missing),
+            ]
+        )
 
-    features = torch.tensor(rows, dtype=torch.float32)
-    return features, feature_names, {"matched": matched, "missing": len(card_names) - matched}
+    return torch.tensor(rows, dtype=torch.float32), feature_names, {"matched": matched, "missing": len(card_names) - matched}
 
 
-def chunk_row_counts(chunks: list[Path]) -> list[int]:
-    counts: list[int] = []
+def validation_mask(rows: int, chunk_index: int, val_fraction: float) -> np.ndarray:
+    return np.random.default_rng(SEED + chunk_index * 1_000_003).random(rows) < val_fraction
+
+
+def chunk_counts(chunks: list[Path]) -> list[int]:
+    counts = []
     for path in chunks:
         with np.load(path) as data:
             counts.append(int(data["y"].shape[0]))
     return counts
 
 
-def validation_mask(row_count: int, chunk_index: int, val_fraction: float, seed: int) -> np.ndarray:
-    if val_fraction <= 0:
-        return np.zeros(row_count, dtype=bool)
-    rng = np.random.default_rng(seed + chunk_index * 1_000_003)
-    return rng.random(row_count) < val_fraction
-
-
-def split_summary(
-    row_counts: list[int],
-    val_fraction: float,
-    seed: int,
-    batch_size: int,
-) -> tuple[int, int, int, int]:
-    train_rows = 0
-    val_rows = 0
-    train_batches = 0
-    val_batches = 0
-    for chunk_index, row_count in enumerate(row_counts):
-        mask = validation_mask(row_count, chunk_index, val_fraction, seed)
-        chunk_val_rows = int(mask.sum())
-        chunk_train_rows = row_count - chunk_val_rows
-        train_rows += chunk_train_rows
-        val_rows += chunk_val_rows
-        train_batches += math.ceil(chunk_train_rows / batch_size) if chunk_train_rows else 0
-        val_batches += math.ceil(chunk_val_rows / batch_size) if chunk_val_rows else 0
-    return train_rows, val_rows, train_batches, val_batches
+def split_summary(counts: list[int], val_fraction: float, batch_size: int) -> tuple[int, int, int, int]:
+    train = val = train_batches = val_batches = 0
+    for i, rows in enumerate(counts):
+        val_rows = int(validation_mask(rows, i, val_fraction).sum()) if val_fraction > 0 else 0
+        train_rows = rows - val_rows
+        train += train_rows
+        val += val_rows
+        train_batches += math.ceil(train_rows / batch_size) if train_rows else 0
+        val_batches += math.ceil(val_rows / batch_size) if val_rows else 0
+    return train, val, train_batches, val_batches
 
 
 def iter_batches(
     chunks: list[Path],
-    num_cards: int,
+    cards: int,
     batch_size: int,
     val_fraction: float,
-    seed: int,
     epoch: int,
     split: str,
     max_batches: int | None,
 ) -> Iterator[tuple[np.ndarray, np.ndarray]]:
-    chunk_order = list(enumerate(chunks))
-    rng = np.random.default_rng(seed + epoch * 10_007 + (0 if split == "train" else 50_000))
+    rng = np.random.default_rng(SEED + epoch * 10_007 + (0 if split == "train" else 50_000))
+    order = list(enumerate(chunks))
     if split == "train":
-        rng.shuffle(chunk_order)
+        rng.shuffle(order)
 
-    batches_seen = 0
-    for chunk_index, path in chunk_order:
+    seen = 0
+    for chunk_index, path in order:
         with np.load(path) as data:
-            x = data["X"]
-            y = data["y"]
-            val_mask = validation_mask(len(y), chunk_index, val_fraction, seed)
-            indices = np.flatnonzero(~val_mask if split == "train" else val_mask)
+            x, y = data["X"], data["y"]
+            mask = validation_mask(len(y), chunk_index, val_fraction) if val_fraction > 0 else np.zeros(len(y), dtype=bool)
+            rows = np.flatnonzero(~mask if split == "train" else mask)
             if split == "train":
-                rng.shuffle(indices)
+                rng.shuffle(rows)
 
-            for start in range(0, len(indices), batch_size):
-                if max_batches is not None and batches_seen >= max_batches:
+            for start in range(0, len(rows), batch_size):
+                if max_batches is not None and seen >= max_batches:
                     return
-                batch_indices = indices[start : start + batch_size]
-                if len(batch_indices) == 0:
-                    continue
-                batch_x = np.ascontiguousarray(x[batch_indices, : 2 + 2 * num_cards])
-                batch_y = np.ascontiguousarray(y[batch_indices]).astype(np.int64, copy=False)
-                batches_seen += 1
-                yield batch_x, batch_y
+                batch_rows = rows[start : start + batch_size]
+                seen += 1
+                yield np.ascontiguousarray(x[batch_rows, : 2 + 2 * cards]), np.ascontiguousarray(y[batch_rows]).astype(np.int64, copy=False)
 
 
-def unpack_batch(
-    batch_x: np.ndarray,
-    batch_y: np.ndarray,
-    num_cards: int,
+def unpack(x: np.ndarray, y: np.ndarray, cards: int, device: torch.device) -> tuple[torch.Tensor, ...]:
+    return (
+        torch.as_tensor(x[:, 2 + cards : 2 + 2 * cards], dtype=torch.float32, device=device),
+        torch.as_tensor(x[:, 2 : 2 + cards], dtype=torch.float32, device=device),
+        torch.as_tensor(x[:, 0], dtype=torch.long, device=device),
+        torch.as_tensor(x[:, 1], dtype=torch.long, device=device),
+        torch.as_tensor(y, dtype=torch.long, device=device),
+    )
+
+
+def logits_for(model: nn.Module, pool: torch.Tensor, pack: torch.Tensor, pack_no: torch.Tensor, pick_no: torch.Tensor) -> torch.Tensor:
+    return model(pool, pack > 0) if MODEL == "draftscorer" else model(pool, pack, pack_no, pick_no)
+
+
+def masked_cross_entropy(logits: torch.Tensor, targets: torch.Tensor, mask: torch.Tensor, smoothing: float, choice_weighting: bool) -> torch.Tensor:
+    log_probs = F.log_softmax(logits, 1)
+    per_row = -log_probs.gather(1, targets[:, None]).squeeze(1)
+    if smoothing > 0:
+        legal = mask.float()
+        per_row = (1.0 - smoothing) * per_row + smoothing * (-(log_probs * legal).sum(1) / legal.sum(1).clamp_min(1.0))
+    if not choice_weighting:
+        return per_row.mean()
+    weights = torch.log2(mask.sum(1).float().clamp_min(2.0))
+    return (per_row * weights).sum() / weights.sum().clamp_min(1.0)
+
+
+def amp_context(device: torch.device, enabled: bool):
+    return torch.amp.autocast("cuda") if enabled and device.type == "cuda" else nullcontext()
+
+
+def run_epoch(
+    model: nn.Module,
+    opt: torch.optim.Optimizer | None,
+    scheduler: Any,
+    scaler: torch.amp.GradScaler | None,
     device: torch.device,
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    pack_numbers = torch.as_tensor(batch_x[:, 0], dtype=torch.long, device=device)
-    pick_numbers = torch.as_tensor(batch_x[:, 1], dtype=torch.long, device=device)
-    pack_counts = torch.as_tensor(batch_x[:, 2 : 2 + num_cards], dtype=torch.float32, device=device)
-    pool_counts = torch.as_tensor(batch_x[:, 2 + num_cards : 2 + 2 * num_cards], dtype=torch.float32, device=device)
-    targets = torch.as_tensor(batch_y, dtype=torch.long, device=device)
-    return pool_counts, pack_counts, pack_numbers, pick_numbers, targets
-
-
-def forward_model(
-    model: nn.Module,
-    model_name: str,
-    pool_counts: torch.Tensor,
-    pack_counts: torch.Tensor,
-    pack_numbers: torch.Tensor,
-    pick_numbers: torch.Tensor,
-) -> torch.Tensor:
-    if model_name == "draftscorer":
-        return model(pool_counts, pack_counts > 0)
-    return model(pool_counts, pack_counts, pack_numbers, pick_numbers)
-
-
-def masked_cross_entropy(
-    logits: torch.Tensor,
-    targets: torch.Tensor,
-    pack_mask: torch.Tensor,
-    label_smoothing: float,
-    choice_weighting: bool,
-) -> torch.Tensor:
-    log_probs = F.log_softmax(logits, dim=1)
-    nll = -log_probs.gather(1, targets.unsqueeze(1)).squeeze(1)
-
-    if label_smoothing > 0:
-        legal = pack_mask.float()
-        smooth = -(log_probs * legal).sum(dim=1) / legal.sum(dim=1).clamp_min(1.0)
-        per_sample = (1.0 - label_smoothing) * nll + label_smoothing * smooth
-    else:
-        per_sample = nll
-
-    if choice_weighting:
-        legal_counts = pack_mask.sum(dim=1).float()
-        weights = torch.log2(legal_counts.clamp_min(2.0))
-        return (per_sample * weights).sum() / weights.sum().clamp_min(1.0)
-    return per_sample.mean()
-
-
-def autocast_context(device: torch.device, enabled: bool):
-    if enabled and device.type == "cuda":
-        if hasattr(torch, "amp") and hasattr(torch.amp, "autocast"):
-            return torch.amp.autocast("cuda")
-        return torch.cuda.amp.autocast()
-    return nullcontext()
-
-
-def make_grad_scaler(enabled: bool):
-    if hasattr(torch, "amp") and hasattr(torch.amp, "GradScaler"):
-        try:
-            return torch.amp.GradScaler("cuda", enabled=enabled)
-        except TypeError:
-            return torch.amp.GradScaler(enabled=enabled)
-    return torch.cuda.amp.GradScaler(enabled=enabled)
-
-
-def train_one_epoch(
-    model: nn.Module,
-    model_name: str,
     chunks: list[Path],
-    num_cards: int,
-    optimizer: torch.optim.Optimizer,
-    scheduler: torch.optim.lr_scheduler.LRScheduler | None,
-    scaler: torch.cuda.amp.GradScaler,
-    device: torch.device,
-    args: argparse.Namespace,
+    cards: int,
     epoch: int,
+    batch_size: int,
+    val_fraction: float,
+    max_batches: int | None,
 ) -> dict[str, float]:
-    model.train()
-    metrics = MetricAccumulator()
-    start_time = time.time()
+    training = opt is not None
+    model.train(training)
+    metrics, start = Metrics(), time.time()
+    split = "train" if training else "val"
 
-    for step, (batch_x, batch_y) in enumerate(
-        iter_batches(
-            chunks=chunks,
-            num_cards=num_cards,
-            batch_size=args.batch_size,
-            val_fraction=args.val_fraction,
-            seed=args.seed,
-            epoch=epoch,
-            split="train",
-            max_batches=args.max_steps_per_epoch,
-        ),
-        start=1,
-    ):
-        pool_counts, pack_counts, pack_numbers, pick_numbers, targets = unpack_batch(
-            batch_x=batch_x,
-            batch_y=batch_y,
-            num_cards=num_cards,
-            device=device,
-        )
-        pack_mask = pack_counts > 0
+    for step, (x, y) in enumerate(iter_batches(chunks, cards, batch_size, val_fraction, epoch, split, max_batches), 1):
+        pool, pack, pack_no, pick_no, targets = unpack(x, y, cards, device)
+        mask = pack > 0
+        with torch.set_grad_enabled(training), amp_context(device, USE_AMP and training):
+            logits = logits_for(model, pool, pack, pack_no, pick_no)
+            loss = masked_cross_entropy(logits, targets, mask, LABEL_SMOOTHING if training else 0.0, CHOICE_WEIGHTING if training else False)
 
-        optimizer.zero_grad(set_to_none=True)
-        with autocast_context(device, args.amp):
-            logits = forward_model(model, model_name, pool_counts, pack_counts, pack_numbers, pick_numbers)
-            loss = masked_cross_entropy(
-                logits=logits,
-                targets=targets,
-                pack_mask=pack_mask,
-                label_smoothing=args.label_smoothing,
-                choice_weighting=args.choice_weighting,
-            )
-
-        scaler.scale(loss).backward()
-        if args.grad_clip > 0:
-            scaler.unscale_(optimizer)
-            torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
-        scaler.step(optimizer)
-        scaler.update()
-        if scheduler is not None:
+        if training:
+            opt.zero_grad(set_to_none=True)
+            if scaler is None:
+                loss.backward()
+                if GRAD_CLIP > 0:
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), GRAD_CLIP)
+                opt.step()
+            else:
+                scaler.scale(loss).backward()
+                if GRAD_CLIP > 0:
+                    scaler.unscale_(opt)
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), GRAD_CLIP)
+                scaler.step(opt)
+                scaler.update()
             scheduler.step()
 
-        metrics.update(loss, logits.detach(), targets, pack_mask)
-        if args.log_every > 0 and step % args.log_every == 0:
-            current = metrics.as_dict()
-            rows_per_second = metrics.samples / max(time.time() - start_time, 1e-6)
-            lr = optimizer.param_groups[0]["lr"]
-            print(
-                f"  step {step:5d} | loss {current['loss']:.4f} | "
-                f"top1 {current['top1']:.4f} | nontriv {current['nontrivial_top1']:.4f} | "
-                f"lr {lr:.2e} | {rows_per_second:,.0f} rows/s"
-            )
+        metrics.update(loss, logits.detach(), targets, mask)
+        if training and LOG_EVERY > 0 and step % LOG_EVERY == 0:
+            now = metrics.as_dict()
+            speed = metrics.samples / max(time.time() - start, 1e-6)
+            print(f"  step {step:5d} | loss {now['loss']:.4f} | top1 {now['top1']:.4f} | nontriv {now['nontrivial_top1']:.4f} | lr {opt.param_groups[0]['lr']:.2e} | {speed:,.0f} rows/s")
 
     result = metrics.as_dict()
-    result["seconds"] = time.time() - start_time
+    result["seconds"] = time.time() - start
     return result
 
 
-@torch.no_grad()
-def evaluate(
-    model: nn.Module,
-    model_name: str,
-    chunks: list[Path],
-    num_cards: int,
-    device: torch.device,
-    args: argparse.Namespace,
-    epoch: int,
-) -> dict[str, float]:
-    model.eval()
-    metrics = MetricAccumulator()
-    start_time = time.time()
-    for batch_x, batch_y in iter_batches(
-        chunks=chunks,
-        num_cards=num_cards,
-        batch_size=args.batch_size,
-        val_fraction=args.val_fraction,
-        seed=args.seed,
-        epoch=epoch,
-        split="val",
-        max_batches=args.max_val_batches,
-    ):
-        pool_counts, pack_counts, pack_numbers, pick_numbers, targets = unpack_batch(
-            batch_x=batch_x,
-            batch_y=batch_y,
-            num_cards=num_cards,
-            device=device,
-        )
-        pack_mask = pack_counts > 0
-        logits = forward_model(model, model_name, pool_counts, pack_counts, pack_numbers, pick_numbers)
-        loss = masked_cross_entropy(
-            logits=logits,
-            targets=targets,
-            pack_mask=pack_mask,
-            label_smoothing=0.0,
-            choice_weighting=False,
-        )
-        metrics.update(loss, logits, targets, pack_mask)
-
-    result = metrics.as_dict()
-    result["seconds"] = time.time() - start_time
-    return result
+def make_model(cards: int, features: torch.Tensor) -> tuple[nn.Module, dict[str, Any]]:
+    if MODEL == "draftscorer":
+        kwargs = {"num_cards": cards, "emb_dim": EMB_DIM}
+        return DraftScorer(**kwargs), kwargs
+    kwargs = {
+        "num_cards": cards,
+        "card_features": features,
+        "emb_dim": EMB_DIM,
+        "hidden_dim": HIDDEN_DIM,
+        "synergy_dim": SYNERGY_DIM,
+        "dropout": DROPOUT,
+    }
+    return ContextualDraftScorer(**kwargs), kwargs
 
 
-def serializable_args(args: argparse.Namespace) -> dict[str, Any]:
-    result: dict[str, Any] = {}
-    for key, value in vars(args).items():
-        result[key] = str(value) if isinstance(value, Path) else value
-    return result
-
-
-def unwrap_compiled(model: nn.Module) -> nn.Module:
+def uncompiled(model: nn.Module) -> nn.Module:
     return model._orig_mod if hasattr(model, "_orig_mod") else model
 
 
-def save_checkpoint(
-    path: Path,
-    model: nn.Module,
-    optimizer: torch.optim.Optimizer,
-    scheduler: torch.optim.lr_scheduler.LRScheduler | None,
-    epoch: int,
-    best_val_loss: float,
-    metadata: dict[str, Any],
-    model_kwargs: dict[str, Any],
-    args: argparse.Namespace,
-    history: list[dict[str, Any]],
-    feature_names: list[str],
-    feature_match: dict[str, int],
-) -> None:
+def save_checkpoint(path: Path, model: nn.Module, opt: torch.optim.Optimizer, scheduler: Any, epoch: int, best: float, metadata: dict[str, Any], model_kwargs: dict[str, Any], history: list[dict[str, Any]], feature_names: list[str], feature_match: dict[str, int]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(
         {
             "epoch": epoch,
-            "best_val_loss": best_val_loss,
-            "model_name": args.model,
+            "best_val_loss": best,
+            "model_name": MODEL,
             "model_kwargs": model_kwargs,
-            "model_state": unwrap_compiled(model).state_dict(),
-            "optimizer_state": optimizer.state_dict(),
-            "scheduler_state": scheduler.state_dict() if scheduler is not None else None,
-            "args": serializable_args(args),
+            "model_state": uncompiled(model).state_dict(),
+            "optimizer_state": opt.state_dict(),
+            "scheduler_state": scheduler.state_dict(),
+            "args": config_dict(),
             "history": history,
             "card_names": metadata["card_names"],
             "feature_names": feature_names,
@@ -555,205 +358,105 @@ def save_checkpoint(
     )
 
 
-def format_metrics(prefix: str, metrics: dict[str, float]) -> str:
-    return (
-        f"{prefix} loss {metrics['loss']:.4f} | top1 {metrics['top1']:.4f} | "
-        f"top3 {metrics['top3']:.4f} | mrr {metrics['mrr']:.4f} | "
-        f"nontriv {metrics['nontrivial_top1']:.4f} | {metrics['seconds']:.1f}s"
-    )
-
-
-def make_model(
-    args: argparse.Namespace,
-    num_cards: int,
-    card_features: torch.Tensor,
-) -> tuple[nn.Module, dict[str, Any]]:
-    if args.model == "draftscorer":
-        kwargs = {"num_cards": num_cards, "emb_dim": args.emb_dim}
-        return DraftScorer(**kwargs), kwargs
-
-    kwargs = {
-        "num_cards": num_cards,
-        "card_features": card_features,
-        "emb_dim": args.emb_dim,
-        "hidden_dim": args.hidden_dim,
-        "synergy_dim": args.synergy_dim,
-        "dropout": args.dropout,
-    }
-    return ContextualDraftScorer(**kwargs), kwargs
-
-
-def load_checkpoint(
-    checkpoint_path: Path,
-    model: nn.Module,
-    optimizer: torch.optim.Optimizer,
-    scheduler: torch.optim.lr_scheduler.LRScheduler | None,
-    device: torch.device,
-) -> tuple[int, float, list[dict[str, Any]]]:
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+def load_checkpoint(path: Path, model: nn.Module, opt: torch.optim.Optimizer, scheduler: Any, device: torch.device) -> tuple[int, float, list[dict[str, Any]]]:
+    checkpoint = torch.load(path, map_location=device)
     model.load_state_dict(checkpoint["model_state"])
-    optimizer.load_state_dict(checkpoint["optimizer_state"])
-    if scheduler is not None and checkpoint.get("scheduler_state") is not None:
-        scheduler.load_state_dict(checkpoint["scheduler_state"])
+    opt.load_state_dict(checkpoint["optimizer_state"])
+    scheduler.load_state_dict(checkpoint["scheduler_state"])
     return int(checkpoint["epoch"]) + 1, float(checkpoint.get("best_val_loss", math.inf)), checkpoint.get("history", [])
 
 
+def format_metrics(prefix: str, metrics: dict[str, float]) -> str:
+    return f"{prefix} loss {metrics['loss']:.4f} | top1 {metrics['top1']:.4f} | top3 {metrics['top3']:.4f} | mrr {metrics['mrr']:.4f} | nontriv {metrics['nontrivial_top1']:.4f} | {metrics['seconds']:.1f}s"
+
+
+def save_top1_plot(history: list[dict[str, Any]]) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    epochs = [row["epoch"] + 1 for row in history]
+    train_top1 = [row["train"]["top1"] for row in history]
+    val_top1 = [row["val"]["top1"] for row in history]
+
+    TOP1_PLOT.parent.mkdir(parents=True, exist_ok=True)
+    plt.figure(figsize=(8, 5))
+    plt.plot(epochs, train_top1, marker="o", label="train top-1")
+    plt.plot(epochs, val_top1, marker="o", label="validation top-1")
+    plt.xlabel("Epoch")
+    plt.ylabel("Top-1 accuracy")
+    plt.title("Top-1 Accuracy Over Epochs")
+    plt.grid(True, alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(TOP1_PLOT, dpi=150)
+    plt.close()
+    print(f"saved top-1 graph to {TOP1_PLOT}")
+
+
 def main() -> int:
-    args = parse_args()
-    if args.quick:
-        args.epochs = 1
-        args.limit_chunks = args.limit_chunks or 3
-        args.max_steps_per_epoch = args.max_steps_per_epoch or 20
-        args.max_val_batches = args.max_val_batches or 10
-        args.batch_size = min(args.batch_size, 1024)
+    epochs = 1 if QUICK else EPOCHS
+    batch_size = min(BATCH_SIZE, 1024) if QUICK else BATCH_SIZE
+    limit_chunks = LIMIT_CHUNKS or QUICK_CHUNKS if QUICK else LIMIT_CHUNKS
+    max_train_batches = MAX_STEPS_PER_EPOCH or QUICK_TRAIN_BATCHES if QUICK else MAX_STEPS_PER_EPOCH
+    max_val_batches = MAX_VAL_BATCHES or QUICK_VAL_BATCHES if QUICK else MAX_VAL_BATCHES
 
-    if args.num_threads > 0:
-        torch.set_num_threads(args.num_threads)
-    if hasattr(torch, "set_float32_matmul_precision"):
-        torch.set_float32_matmul_precision("high")
+    if NUM_THREADS > 0:
+        torch.set_num_threads(NUM_THREADS)
+    torch.set_float32_matmul_precision("high")
+    seed_everything()
 
-    set_seed(args.seed)
-    device = choose_device(args.device)
-    args.amp = bool(args.amp and device.type == "cuda")
-
-    metadata = load_metadata(args.data_dir)
+    device = torch.device(DEVICE if DEVICE != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
+    use_amp = bool(USE_AMP and device.type == "cuda")
+    metadata = load_json(DATA_DIR / "metadata.json")
     card_names = metadata["card_names"]
-    num_cards = len(card_names)
-    chunks = find_chunks(args.data_dir, args.limit_chunks)
-    row_counts = chunk_row_counts(chunks)
-    train_rows, val_rows, train_batches, val_batches = split_summary(
-        row_counts=row_counts,
-        val_fraction=args.val_fraction,
-        seed=args.seed,
-        batch_size=args.batch_size,
-    )
-    if args.max_steps_per_epoch is not None:
-        train_batches = min(train_batches, args.max_steps_per_epoch)
-    if args.max_val_batches is not None:
-        val_batches = min(val_batches, args.max_val_batches)
+    cards = len(card_names)
+    chunks = sorted(DATA_DIR.glob("draft_xy_chunk_*.npz"))[:limit_chunks]
 
-    card_features, feature_names, feature_match = build_card_features(
-        card_names=card_names,
-        card_data_path=args.card_data,
-        use_card_features=not args.no_card_features,
-    )
-    model, model_kwargs = make_model(args, num_cards, card_features)
+    train_rows, val_rows, train_batches, val_batches = split_summary(chunk_counts(chunks), VAL_FRACTION, batch_size)
+    train_batches = min(train_batches, max_train_batches) if max_train_batches is not None else train_batches
+    val_batches = min(val_batches, max_val_batches) if max_val_batches is not None else val_batches
+
+    features, feature_names, feature_match = build_card_features(card_names)
+    model, model_kwargs = make_model(cards, features)
     model = model.to(device)
+    opt = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
+    scheduler = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=LR, total_steps=max(train_batches * epochs, 1), pct_start=0.08, div_factor=10.0, final_div_factor=50.0)
+    scaler = torch.amp.GradScaler("cuda") if use_amp else None
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-    total_steps = max(train_batches * args.epochs, 1)
-    scheduler = torch.optim.lr_scheduler.OneCycleLR(
-        optimizer,
-        max_lr=args.lr,
-        total_steps=total_steps,
-        pct_start=0.08,
-        div_factor=10.0,
-        final_div_factor=50.0,
-    )
-    scaler = make_grad_scaler(enabled=args.amp)
-
-    start_epoch = 0
-    best_val_loss = math.inf
-    history: list[dict[str, Any]] = []
-    if args.resume is not None:
-        start_epoch, best_val_loss, history = load_checkpoint(args.resume, model, optimizer, scheduler, device)
-
-    if args.compile and hasattr(torch, "compile"):
+    start_epoch, best, history = 0, math.inf, []
+    if RESUME is not None:
+        start_epoch, best, history = load_checkpoint(RESUME, model, opt, scheduler, device)
+    if COMPILE:
         model = torch.compile(model)
 
     print(f"device: {device}")
-    print(f"model: {args.model}")
-    print(f"cards: {num_cards}")
+    print(f"model: {MODEL}")
+    print(f"cards: {cards}")
     print(f"chunks: {len(chunks)}")
     print(f"rows: train {train_rows:,}, val {val_rows:,}")
     print(f"batches/epoch: train {train_batches:,}, val {val_batches:,}")
     print(f"card metadata: matched {feature_match['matched']}, missing {feature_match['missing']}, features {len(feature_names)}")
-    print(f"checkpoints: {args.output_dir}")
+    print(f"checkpoints: {OUTPUT_DIR}")
 
-    for epoch in range(start_epoch, args.epochs):
-        print(f"\nEpoch {epoch + 1}/{args.epochs}")
-        train_metrics = train_one_epoch(
-            model=model,
-            model_name=args.model,
-            chunks=chunks,
-            num_cards=num_cards,
-            optimizer=optimizer,
-            scheduler=scheduler,
-            scaler=scaler,
-            device=device,
-            args=args,
-            epoch=epoch,
-        )
-        print(format_metrics("train", train_metrics))
+    for epoch in range(start_epoch, epochs):
+        print(f"\nEpoch {epoch + 1}/{epochs}")
+        train = run_epoch(model, opt, scheduler, scaler, device, chunks, cards, epoch, batch_size, VAL_FRACTION, max_train_batches)
+        val = run_epoch(model, None, None, None, device, chunks, cards, epoch, batch_size, VAL_FRACTION, max_val_batches)
+        print(format_metrics("train", train))
+        print(format_metrics("val  ", val))
 
-        val_metrics = evaluate(
-            model=model,
-            model_name=args.model,
-            chunks=chunks,
-            num_cards=num_cards,
-            device=device,
-            args=args,
-            epoch=epoch,
-        )
-        print(format_metrics("val  ", val_metrics))
+        history.append({"epoch": epoch, "train": train, "val": val, "lr": opt.param_groups[0]["lr"]})
+        if val["loss"] < best:
+            best = val["loss"]
+            save_checkpoint(OUTPUT_DIR / "draft_scorer_best.pt", model, opt, scheduler, epoch, best, metadata, model_kwargs, history, feature_names, feature_match)
+            print(f"saved best checkpoint with val loss {best:.4f}")
+        save_checkpoint(OUTPUT_DIR / "draft_scorer_last.pt", model, opt, scheduler, epoch, best, metadata, model_kwargs, history, feature_names, feature_match)
+        if SAVE_EVERY_EPOCH:
+            save_checkpoint(OUTPUT_DIR / f"draft_scorer_epoch_{epoch + 1:03d}.pt", model, opt, scheduler, epoch, best, metadata, model_kwargs, history, feature_names, feature_match)
 
-        epoch_record = {
-            "epoch": epoch,
-            "train": train_metrics,
-            "val": val_metrics,
-            "lr": optimizer.param_groups[0]["lr"],
-        }
-        history.append(epoch_record)
-
-        is_best = val_metrics["loss"] < best_val_loss
-        if is_best:
-            best_val_loss = val_metrics["loss"]
-            save_checkpoint(
-                path=args.output_dir / "draft_scorer_best.pt",
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                best_val_loss=best_val_loss,
-                metadata=metadata,
-                model_kwargs=model_kwargs,
-                args=args,
-                history=history,
-                feature_names=feature_names,
-                feature_match=feature_match,
-            )
-            print(f"saved best checkpoint with val loss {best_val_loss:.4f}")
-
-        save_checkpoint(
-            path=args.output_dir / "draft_scorer_last.pt",
-            model=model,
-            optimizer=optimizer,
-            scheduler=scheduler,
-            epoch=epoch,
-            best_val_loss=best_val_loss,
-            metadata=metadata,
-            model_kwargs=model_kwargs,
-            args=args,
-            history=history,
-            feature_names=feature_names,
-            feature_match=feature_match,
-        )
-        if args.save_every_epoch:
-            save_checkpoint(
-                path=args.output_dir / f"draft_scorer_epoch_{epoch + 1:03d}.pt",
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                best_val_loss=best_val_loss,
-                metadata=metadata,
-                model_kwargs=model_kwargs,
-                args=args,
-                history=history,
-                feature_names=feature_names,
-                feature_match=feature_match,
-            )
-
+    save_top1_plot(history)
     return 0
 
 
