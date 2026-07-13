@@ -16,7 +16,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from NN import ContextualDraftScorer, DraftScorer
+from MTG_Draft_Agent.SL.NN import ContextualDraftScorer, DraftScorer
 
 
 # ---- config: edit these, then run `python train.py` -------------------------
@@ -27,7 +27,7 @@ EXTRA_CARD_DATA = ROOT / "data" / "raw" / "SOS_extra_cards.json"
 OUTPUT_DIR = ROOT / "models"
 TOP1_PLOT = OUTPUT_DIR / "top1_over_epochs.png"
 
-MODEL = "contextual"          # "contextual" or "draftscorer"
+MODEL = "draftscorer"          # "contextual" or "draftscorer"
 EPOCHS = 20
 BATCH_SIZE = 2048
 LR = 2e-3

@@ -181,7 +181,7 @@ class ContextualDraftScorer(nn.Module):
         context = torch.cat([pool_sum, pool_avg, pack_avg, stage_vec, scalars], dim=1)
         query = self.query(self.context_mlp(context))
         keys = self.card_key(card_vecs)
-        logits = (query @ keys.T) * (self.emb_dim ** -0.5)
+        logits = (query @ keys.T) * (self.emb_dim ** -0.5) 
 
         stage_index = pack_numbers * self.max_picks + pick_numbers
         logits = logits + self.card_bias + self.stage_card_bias(stage_index)

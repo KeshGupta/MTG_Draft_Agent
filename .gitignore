@@ -4,7 +4,7 @@ __pycache__/
 .venv/
 .vscode/
 
-data/raw/
-data/cleaned/
-data/cleaned_copy/
-models/*.pt
+SL/data/raw/
+SL/data/cleaned/
+SL/data/cleaned_copy/
+SL/models/*.pt

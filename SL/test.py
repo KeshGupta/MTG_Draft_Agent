@@ -2,7 +2,7 @@ from pathlib import Path
 
 import torch
 
-from NN import ContextualDraftScorer, DraftScorer
+from MTG_Draft_Agent.SL.NN import ContextualDraftScorer, DraftScorer
 
 
 ROOT = Path(__file__).resolve().parent
@@ -12,6 +12,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 checkpoint = torch.load(CHECKPOINT, map_location=device)
 card_names = checkpoint["card_names"]
+print(card_names)
 card_to_index = {name: i for i, name in enumerate(card_names)}
 
 model_name = checkpoint.get("model_name", "contextual")
