@@ -8,3 +8,5 @@ SL/data/raw/
 SL/data/cleaned/
 SL/data/cleaned_copy/
 SL/models/*.pt
+
+RL/deck_tester/pool/*.dck
