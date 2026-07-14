@@ -87,7 +87,7 @@ class draft_env(gym.Env):
         return {
     
             "pool_counts": self.pool_counts.copy(),
-            "pack_counts": self.pack[self.pack_number].copy(),
+            "pack_counts": self.packs[self.pack_number].copy(),
             "pack_number": self.pack_number,
             "pick_number": self.pick_number
         }
