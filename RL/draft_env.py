@@ -133,7 +133,10 @@ class draft_env(gym.Env):
                 "pick_number": 14
             }
 
-            info = {}
+            info = {
+                "action_mask": np.zeros(self.num_cards, dtype=bool),
+                "final_pool": self.pool_counts.copy(),
+               }
         else:
             observations = self.get_observations()
             info = {"action_mask": self.get_mask()}
