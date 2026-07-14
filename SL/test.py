@@ -2,7 +2,7 @@ from pathlib import Path
 
 import torch
 
-from MTG_Draft_Agent.SL.NN import ContextualDraftScorer, DraftScorer
+from NN import ContextualDraftScorer, DraftScorer
 
 
 ROOT = Path(__file__).resolve().parent
