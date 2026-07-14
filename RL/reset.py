@@ -13,7 +13,7 @@ df = pd.read_json("MTG_Draft_Agent/SL/data/raw/SOS_cards.json")
 
 
 names = df["name"].tolist()
-intermediate = df.loc[[df["rarity"] == "common"], df[]]
+intermediate = df.loc[(df["rarity"] == "common") & (df["type"] != "land")]
 common = intermediate["name"].tolist()
 
 intermediate = df.loc[df["rarity"] == "uncommon"]
