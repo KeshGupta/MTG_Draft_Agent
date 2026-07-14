@@ -1,26 +1,18 @@
 import subprocess
 from collections import Counter
 from pathlib import Path
-
-
-BASE_DIR = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester"
-TEST_DIR = BASE_DIR + r"\test"
-POOL_DIR = BASE_DIR + r"\pool"
-JAVA_EXE = r"C:\Users\samth\.jdks\ms-17.0.19\bin\java.exe"
-JAR_FILE = BASE_DIR + r"\forge-gui-desktop-2.0.14-SNAPSHOT-jar-with-dependencies.jar"
-WORKING_DIR = r"C:\Users\samth\Downloads\forge\forge-gui"
-
+import time
 
 class deck_tester:
     def __init__(self):
-        self.base_dir = BASE_DIR
-        self.test_dir = TEST_DIR
-        self.pool_dir = POOL_DIR
-        self.java_exe = JAVA_EXE
-        self.jar_file = JAR_FILE
-        self.working_dir = WORKING_DIR
+        self.base_dir = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester"
+        self.test_dir = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester\test"
+        self.pool_dir = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester\pool"
+        self.java_exe = r"C:\Users\samth\.jdks\ms-17.0.19\bin\java.exe"
+        self.jar_file = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester\forge-gui-desktop-2.0.14-SNAPSHOT-jar-with-dependencies.jar"
+        self.working_dir = r"C:\Users\samth\Downloads\forge\forge-gui"
 
-    def test_batch(self, decks, sample_size=5, match_size=1, timeout=300, seed=None):
+    def test_batch(self, decks, num_games=5, best_of=1, timeout=300, seed=None):
         self.clear_test_dir()
 
         deck_names = []
@@ -42,9 +34,9 @@ class deck_tester:
             "-poolDir",
             self.pool_dir,
             "-s",
-            str(sample_size),
+            str(num_games),
             "-m",
-            str(match_size),
+            str(best_of),
             "-q",
             "-c",
             str(timeout),
@@ -60,11 +52,10 @@ class deck_tester:
             text=True,
         )
 
-        print(result.stdout)
-        print(result.stderr)
-
         if result.returncode != 0:
             raise RuntimeError(f"Deck test failed with exit code {result.returncode}")
+
+        print(result.stdout)
 
         results_by_deck = self._parse_deck_results(result.stdout)
         return [results_by_deck[deck_name] for deck_name in deck_names]
@@ -116,7 +107,6 @@ class deck_tester:
                 lines.append(f"{count} {card}")
 
         deck_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        print(f"Created deck: {deck_path}")
         return str(deck_path)
 
     def clear_test_dir(self):
@@ -126,7 +116,6 @@ class deck_tester:
         for deck_file in test_dir.glob("*.dck"):
             deck_file.unlink()
 
-        print(f"Cleared .dck files from: {self.test_dir}")
 
 
 
@@ -205,4 +194,7 @@ deck = [
     "Mountain",
     "Mountain",
 ]
-print(tester.test_batch([deck], sample_size=5, match_size=1, timeout=300))
+t = time.perf_counter()
+print(tester.test_batch([deck,deck,deck], num_games=10, best_of=1))
+et = time.perf_counter() - t
+print(f"Time taken: {et:.2f} seconds")
