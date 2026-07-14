@@ -39,11 +39,15 @@ class draft_env(gym.Env):
         df = pd.read_json("/MTG_Draft_Agent/SL/data/raw/SOS_cards.json")
         print(df)
 
-        pass
+        return initial_state
 
     def step(self, action):
 
-        return self.getCardIndex(self, action)
+        return next_state, terminated, info
+    
+    def render(self):
+
+        pass
 
     def nameToIndex(self, card_name):
         return self.card_to_index.get(card_name, -1)
