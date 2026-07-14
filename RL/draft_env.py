@@ -17,7 +17,7 @@ class draft_env(gym.Env):
         "pool_counts": spaces.Box(low=0, high=4, shape=(C,), dtype=np.float32),
         "pack_counts": spaces.Box(low=0, high=4, shape=(C,), dtype=np.float32),
         "pack_number": spaces.Discrete(3),  
-        "pick_number": spaces.Discrete(15),
+        "pick_number": spaces.Discrete(14),
         })
 
         self.pool = []
@@ -59,7 +59,9 @@ class draft_env(gym.Env):
             counts[self.card_to_index[card]] += 1.0
         return counts
 
-    def reset(self):
+    def reset(self, seed=None, options=None):
+        super().reset(seed=rand.seed)
+
       #  with open("/MTG_Draft_Agent/SL/data/raw/SOS_cards.json") as json_file:
             #json.dump(data, json_file, indent = 4)
         self.info = {}
@@ -111,7 +113,7 @@ class draft_env(gym.Env):
         # Advance 
         self.pick_number += 1
 
-        if self.pick_number == 15:
+        if self.pick_number == 14:
             self.pick_number = 0
             self.pack_number += 1
 
