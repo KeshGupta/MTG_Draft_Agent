@@ -7,9 +7,7 @@ with open("/Users/keshgupta/Documents/MTG_Draft_Agent/metadata.json", encoding="
     meta = json.load(f)
 index_to_card = {i: name for i, name in enumerate(meta["card_names"])}
 
-info = np.array([0, 44, 88, 145, 13, 2, 17, 24, 40, 80, 300, 11, 12, 13,
-                 45, 222, 55, 34, 67, 89, 90, 91, 92, 93, 94, 95, 96, 97,
-                 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108])
+info = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70])
 
 ratings = pd.read_csv("/Users/keshgupta/Documents/MTG_Draft_Agent/card-ratings-2026-07-14 (1).csv")
 cards   = pd.read_json("/Users/keshgupta/Documents/MTG_Draft_Agent/SOS_cards.json")
@@ -29,6 +27,7 @@ table["cmc"] = table["cmc"].astype(int)
 # min-games reliability filter (tune threshold)
 MIN_GAMES = 200
 table = table[table["games"] >= MIN_GAMES]
+table = table.sort_values("games", ascending=False).drop_duplicates(subset="Name", keep="first")
 
 # --- restrict to the drafted pool, via model index -> name ---
 pool_names = [index_to_card[idx] for idx in info]
@@ -51,5 +50,6 @@ for cmc, need in CARD_DIST.items():
 if len(deck) < 23:
     remaining = pool[~pool["Name"].isin(deck)].sort_values("GIH WR", ascending=False)
     deck.extend(remaining["Name"].head(23 - len(deck)).tolist())
+
 
 print(len(deck), deck)
