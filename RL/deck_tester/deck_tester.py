@@ -1,5 +1,6 @@
 import subprocess
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import time
 
@@ -12,25 +13,56 @@ class deck_tester:
         self.jar_file = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester\forge-gui-desktop-2.0.14-SNAPSHOT-jar-with-dependencies.jar"
         self.working_dir = r"C:\Users\samth\Downloads\forge\forge-gui"
 
-    def test_batch(self, decks, num_games=5, best_of=1, timeout=300, seed=None):
-        self.clear_test_dir()
+    def test_batch(self, decks, num_games=5, best_of=1, timeout=300, seed=None, workers=4):
+        if not decks:
+            return []
+
+        workers = max(1, min(workers, len(decks)))
+        chunks = self._split_decks(decks, workers)
+        results = [None] * len(decks)
+
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            futures = []
+            for worker_id, chunk in enumerate(chunks):
+                if not chunk:
+                    continue
+
+                futures.append(executor.submit(
+                    self._run_deck_chunk,
+                    worker_id,
+                    chunk,
+                    num_games,
+                    best_of,
+                    timeout,
+                    seed,
+                ))
+
+            for future in as_completed(futures):
+                for deck_index, win_percentage in future.result():
+                    results[deck_index] = win_percentage
+
+        return results
+
+    def _run_deck_chunk(self, worker_id, deck_chunk, num_games, best_of, timeout, seed):
+        worker_test_dir = Path(self.base_dir) / "worker_tests" / f"worker_{worker_id:02d}"
+        self.clear_deck_dir(worker_test_dir)
 
         deck_names = []
-        for i, deck in enumerate(decks):
-            deck_name = f"deck_{i:04d}"
+        for deck_index, deck in deck_chunk:
+            deck_name = f"deck_{deck_index:04d}"
             deck_names.append(deck_name)
-            self.add_deck_to_test_dir(deck_name, deck)
+            self.write_deck(worker_test_dir, deck_name, deck)
 
         command = [
             self.java_exe,
-            "-Xmx4096m",
+            "-Xmx1536m",
             "-jar",
             self.jar_file,
             "sim",
             "-t",
             "DeckTest",
             "-testDir",
-            self.test_dir,
+            str(worker_test_dir),
             "-poolDir",
             self.pool_dir,
             "-s",
@@ -50,15 +82,23 @@ class deck_tester:
             cwd=self.working_dir,
             capture_output=True,
             text=True,
+            creationflags=subprocess.ABOVE_NORMAL_PRIORITY_CLASS,
         )
 
         if result.returncode != 0:
             raise RuntimeError(f"Deck test failed with exit code {result.returncode}")
 
-        print(result.stdout)
-
         results_by_deck = self._parse_deck_results(result.stdout)
-        return [results_by_deck[deck_name] for deck_name in deck_names]
+        return [
+            (deck_index, results_by_deck[deck_name])
+            for (deck_index, _), deck_name in zip(deck_chunk, deck_names)
+        ]
+
+    def _split_decks(self, decks, workers):
+        chunks = [[] for _ in range(workers)]
+        for deck_index, deck in enumerate(decks):
+            chunks[deck_index % workers].append((deck_index, deck))
+        return chunks
 
     def _parse_deck_results(self, output):
         lines = output.splitlines()
@@ -87,11 +127,14 @@ class deck_tester:
         return deck_results
 
     def add_deck_to_test_dir(self, deck_name, cards):
-        test_dir = Path(self.test_dir)
-        test_dir.mkdir(parents=True, exist_ok=True)
+        return self.write_deck(Path(self.test_dir), deck_name, cards)
+
+    def write_deck(self, deck_dir, deck_name, cards):
+        deck_dir = Path(deck_dir)
+        deck_dir.mkdir(parents=True, exist_ok=True)
 
         file_name = deck_name.replace(" ", "_").lower() + ".dck"
-        deck_path = test_dir / file_name
+        deck_path = deck_dir / file_name
 
         lines = [
             "[metadata]",
@@ -110,91 +153,65 @@ class deck_tester:
         return str(deck_path)
 
     def clear_test_dir(self):
-        test_dir = Path(self.test_dir)
-        test_dir.mkdir(parents=True, exist_ok=True)
+        self.clear_deck_dir(Path(self.test_dir))
 
-        for deck_file in test_dir.glob("*.dck"):
+    def clear_deck_dir(self, deck_dir):
+        deck_dir = Path(deck_dir)
+        deck_dir.mkdir(parents=True, exist_ok=True)
+
+        for deck_file in deck_dir.glob("*.dck"):
             deck_file.unlink()
 
+if __name__ == "__main__":
+    tester = deck_tester()
+    deck = [
+        "Ajani's Response",
+        "Ascendant Dustspeaker",
+        "Aziza, Mage Tower Captain",
+        "Colossus of the Blood Age",
+        "Colossus of the Blood Age",
+        "Daydream",
+        "Dig Site Inventory",
+        "Eager Glyphmage",
+        "Elite Interceptor",
+        "Fields of Strife",
+        "Garrison Excavator",
+        "Group Project",
+        "Lorehold Charm",
+        "Molten Note",
+        "Monstrous Rage",
+        "Mountain",
+        "Mountain",
+        "Mountain",
+        "Mountain",
+        "Mountain",
+        "Mountain",
+        "Mountain",
+        "Mountain",
+        "Plains",
+        "Plains",
+        "Plains",
+        "Plains",
+        "Plains",
+        "Plains",
+        "Plains",
+        "Plains",
+        "Practiced Scrollsmith",
+        "Practiced Scrollsmith",
+        "Pursue the Past",
+        "Rehearsed Debater",
+        "Reprieve",
+        "Rubble Rouser",
+        "Shattered Acolyte",
+        "Stone Docent",
+        "Stone Docent",
+        "Wilt in the Heat",
+    ]
 
-
-
-tester = deck_tester()
-deck = [
-    "Burnout Bashtronaut",
-    "Burnout Bashtronaut",
-    "Burnout Bashtronaut",
-    "Burnout Bashtronaut",
-
-    "Burst Lightning",
-    "Burst Lightning",
-    "Burst Lightning",
-    "Burst Lightning",
-
-    "Hexing Squelcher",
-    "Hexing Squelcher",
-    "Hexing Squelcher",
-    "Hexing Squelcher",
-
-    "Hired Claw",
-    "Hired Claw",
-    "Hired Claw",
-    "Hired Claw",
-
-    "Howlsquad Heavy",
-    "Howlsquad Heavy",
-    "Howlsquad Heavy",
-    "Howlsquad Heavy",
-
-    "Lightning Strike",
-    "Lightning Strike",
-    "Lightning Strike",
-
-    "Magebane Lizard",
-    "Magebane Lizard",
-    "Magebane Lizard",
-    "Magebane Lizard",
-
-    "Nova Hellkite",
-    "Nova Hellkite",
-    "Nova Hellkite",
-
-    "Shock",
-    "Shock",
-    "Shock",
-    "Shock",
-
-    "Sunspine Lynx",
-    "Sunspine Lynx",
-
-    "Rockface Village",
-    "Rockface Village",
-
-    "Soulstone Sanctuary",
-    "Soulstone Sanctuary",
-    "Soulstone Sanctuary",
-
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-    "Mountain",
-]
-t = time.perf_counter()
-print(tester.test_batch([deck,deck,deck], num_games=10, best_of=1))
-et = time.perf_counter() - t
-print(f"Time taken: {et:.2f} seconds")
+    times = []
+    for i in range(4):
+        t = time.perf_counter()
+        print(tester.test_batch([deck, deck, deck,deck], num_games=25, best_of=1, workers=4,timeout=10,seed=5))
+        et = time.perf_counter() - t
+        times.append(et)
+    print(times)
