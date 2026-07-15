@@ -51,7 +51,6 @@ class draft_env(gym.Env):
 
         self.rare_mythic = rare + mythic
 
-        return 
     
     def names_to_counts(self, card_list):
         counts = np.zeros(self.num_cards, dtype=np.float32)
