@@ -16,7 +16,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from MTG_Draft_Agent.SL.NN import ContextualDraftScorer, DraftScorer
+from NN import ContextualDraftScorer, DraftScorer
 
 
 # ---- config: edit these, then run `python train.py` -------------------------
