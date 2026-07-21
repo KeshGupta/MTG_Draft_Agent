@@ -6,12 +6,12 @@ import time
 
 class deck_tester:
     def __init__(self):
-        self.base_dir = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester"
-        self.test_dir = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester\test"
-        self.pool_dir = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester\pool"
-        self.java_exe = r"C:\Users\samth\.jdks\ms-17.0.19\bin\java.exe"
-        self.jar_file = r"C:\Users\samth\OneDrive\Desktop\mtg\MTG_Draft_Agent\RL\deck_tester\forge-gui-desktop-2.0.14-SNAPSHOT-jar-with-dependencies.jar"
-        self.working_dir = r"C:\Users\samth\Downloads\forge\forge-gui"
+        self.base_dir = Path(__file__).resolve().parent
+        self.test_dir = self.base_dir / "test"
+        self.pool_dir = self.base_dir / "pool"
+        self.java_exe = Path(r"C:\Users\samth\.jdks\ms-17.0.19\bin\java.exe")
+        self.jar_file = self.base_dir / "forge-gui-desktop-2.0.14-SNAPSHOT-jar-with-dependencies.jar"
+        self.working_dir = Path(r"C:\Users\samth\Downloads\forge\forge-gui")
 
     def test_batch(self, decks, num_games=5, best_of=1, timeout=300, seed=None, workers=4):
         if not decks:
@@ -46,7 +46,7 @@ class deck_tester:
         ]
 
     def _run_deck_job(self, job, best_of, timeout, seed):
-        worker_test_dir = Path(self.base_dir) / "worker_tests" / f"job_{job['job_id']:03d}"
+        worker_test_dir = self.base_dir / "worker_tests" / f"job_{job['job_id']:03d}"
         self.clear_deck_dir(worker_test_dir)
 
         deck_names = []
@@ -55,17 +55,17 @@ class deck_tester:
             self.write_deck(worker_test_dir, deck_name, deck)
 
         command = [
-            self.java_exe,
+            str(self.java_exe),
             "-Xmx1536m",
             "-jar",
-            self.jar_file,
+            str(self.jar_file),
             "sim",
             "-t",
             "DeckTest",
             "-testDir",
             str(worker_test_dir),
             "-poolDir",
-            self.pool_dir,
+            str(self.pool_dir),
             "-s",
             str(job["num_games"]),
             "-m",
@@ -161,7 +161,7 @@ class deck_tester:
         return deck_results
 
     def add_deck_to_test_dir(self, deck_name, cards):
-        return self.write_deck(Path(self.test_dir), deck_name, cards)
+        return self.write_deck(self.test_dir, deck_name, cards)
 
     def write_deck(self, deck_dir, deck_name, cards):
         deck_dir = Path(deck_dir)
@@ -187,7 +187,7 @@ class deck_tester:
         return str(deck_path)
 
     def clear_test_dir(self):
-        self.clear_deck_dir(Path(self.test_dir))
+        self.clear_deck_dir(self.test_dir)
 
     def clear_deck_dir(self, deck_dir):
         deck_dir = Path(deck_dir)
