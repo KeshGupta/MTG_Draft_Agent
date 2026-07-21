@@ -17,40 +17,41 @@ class deck_tester:
         if not decks:
             return []
 
-        workers = max(1, min(workers, len(decks)))
-        chunks = self._split_decks(decks, workers)
-        results = [None] * len(decks)
+        workers = max(1, workers)
+        jobs = self._make_jobs(decks, num_games, workers)
+        totals = [
+            {"matches": 0, "wins": 0}
+            for _ in decks
+        ]
 
         with ThreadPoolExecutor(max_workers=workers) as executor:
             futures = []
-            for worker_id, chunk in enumerate(chunks):
-                if not chunk:
-                    continue
-
+            for job in jobs:
                 futures.append(executor.submit(
-                    self._run_deck_chunk,
-                    worker_id,
-                    chunk,
-                    num_games,
+                    self._run_deck_job,
+                    job,
                     best_of,
                     timeout,
                     seed,
                 ))
 
             for future in as_completed(futures):
-                for deck_index, win_percentage in future.result():
-                    results[deck_index] = win_percentage
+                for deck_index, stats in future.result():
+                    totals[deck_index]["matches"] += stats["matches"]
+                    totals[deck_index]["wins"] += stats["wins"]
 
-        return results
+        return [
+            total["wins"] * 100.0 / total["matches"] if total["matches"] else 0.0
+            for total in totals
+        ]
 
-    def _run_deck_chunk(self, worker_id, deck_chunk, num_games, best_of, timeout, seed):
-        worker_test_dir = Path(self.base_dir) / "worker_tests" / f"worker_{worker_id:02d}"
+    def _run_deck_job(self, job, best_of, timeout, seed):
+        worker_test_dir = Path(self.base_dir) / "worker_tests" / f"job_{job['job_id']:03d}"
         self.clear_deck_dir(worker_test_dir)
 
         deck_names = []
-        for deck_index, deck in deck_chunk:
-            deck_name = f"deck_{deck_index:04d}"
-            deck_names.append(deck_name)
+        for deck_index, deck, deck_name in job["decks"]:
+            deck_names.append((deck_index, deck_name))
             self.write_deck(worker_test_dir, deck_name, deck)
 
         command = [
@@ -66,7 +67,7 @@ class deck_tester:
             "-poolDir",
             self.pool_dir,
             "-s",
-            str(num_games),
+            str(job["num_games"]),
             "-m",
             str(best_of),
             "-q",
@@ -75,7 +76,7 @@ class deck_tester:
         ]
 
         if seed is not None:
-            command += ["-seed", str(seed)]
+            command += ["-seed", str(seed + job["job_id"])]
 
         result = subprocess.run(
             command,
@@ -91,14 +92,42 @@ class deck_tester:
         results_by_deck = self._parse_deck_results(result.stdout)
         return [
             (deck_index, results_by_deck[deck_name])
-            for (deck_index, _), deck_name in zip(deck_chunk, deck_names)
+            for deck_index, deck_name in deck_names
         ]
 
-    def _split_decks(self, decks, workers):
-        chunks = [[] for _ in range(workers)]
+    def _make_jobs(self, decks, num_games, workers):
+        if len(decks) >= workers:
+            chunks = [[] for _ in range(workers)]
+            for deck_index, deck in enumerate(decks):
+                deck_name = f"deck_{deck_index:04d}"
+                chunks[deck_index % workers].append((deck_index, deck, deck_name))
+
+            return [
+                {"job_id": job_id, "num_games": num_games, "decks": chunk}
+                for job_id, chunk in enumerate(chunks)
+                if chunk
+            ]
+
+        jobs = []
+        n_decks = len(decks)
         for deck_index, deck in enumerate(decks):
-            chunks[deck_index % workers].append((deck_index, deck))
-        return chunks
+            shard_count = workers // n_decks
+            if deck_index < workers % n_decks:
+                shard_count += 1
+            shard_count = max(1, min(shard_count, num_games))
+
+            base_games = num_games // shard_count
+            extra_games = num_games % shard_count
+            for shard_index in range(shard_count):
+                shard_games = base_games + (1 if shard_index < extra_games else 0)
+                deck_name = f"deck_{deck_index:04d}_shard_{shard_index:02d}"
+                jobs.append({
+                    "job_id": len(jobs),
+                    "num_games": shard_games,
+                    "decks": [(deck_index, deck, deck_name)],
+                })
+
+        return jobs
 
     def _parse_deck_results(self, output):
         lines = output.splitlines()
@@ -121,8 +150,13 @@ class deck_tester:
                 continue
 
             deck_name = " ".join(parts[:-5])
-            win_percentage = float(parts[-1])
-            deck_results[deck_name] = win_percentage
+            deck_results[deck_name] = {
+                "matches": int(parts[-5]),
+                "wins": int(parts[-4]),
+                "losses": int(parts[-3]),
+                "ties": int(parts[-2]),
+                "win_percentage": float(parts[-1]),
+            }
 
         return deck_results
 
@@ -165,53 +199,33 @@ class deck_tester:
 if __name__ == "__main__":
     tester = deck_tester()
     deck = [
-        "Ajani's Response",
-        "Ascendant Dustspeaker",
-        "Aziza, Mage Tower Captain",
-        "Colossus of the Blood Age",
-        "Colossus of the Blood Age",
-        "Daydream",
-        "Dig Site Inventory",
-        "Eager Glyphmage",
-        "Elite Interceptor",
-        "Fields of Strife",
-        "Garrison Excavator",
-        "Group Project",
-        "Lorehold Charm",
-        "Molten Note",
-        "Monstrous Rage",
-        "Mountain",
-        "Mountain",
-        "Mountain",
-        "Mountain",
-        "Mountain",
-        "Mountain",
-        "Mountain",
-        "Mountain",
-        "Plains",
-        "Plains",
-        "Plains",
-        "Plains",
-        "Plains",
-        "Plains",
-        "Plains",
-        "Plains",
-        "Practiced Scrollsmith",
-        "Practiced Scrollsmith",
-        "Pursue the Past",
-        "Rehearsed Debater",
-        "Reprieve",
-        "Rubble Rouser",
-        "Shattered Acolyte",
-        "Stone Docent",
-        "Stone Docent",
-        "Wilt in the Heat",
+    "2 Additive Evolution",
+    "1 Adventurous Eater",
+    "1 Berta, Wise Extrapolator",
+    "2 Essenceknit Scholar",
+    "6 Forest",
+    "3 Grapple with Death",
+    "1 Infirmary Healer",
+    "1 Island",
+    "1 Last Gasp",
+    "2 Mindful Biomancer",
+    "2 Paradox Gardens",
+    "2 Pest Mascot",
+    "1 Professor Dellian Fel",
+    "2 Studious First-Year",
+    "7 Swamp",
+    "1 Teacher's Pest",
+    "1 Thornfist Striker",
+    "1 Titan's Grave",
+    "1 Tragedy Feaster",
+    "1 Wander Off",
+    "1 Witherbloom Charm"
     ]
 
     times = []
-    for i in range(4):
+    for i in range(1):
         t = time.perf_counter()
-        print(tester.test_batch([deck, deck, deck,deck], num_games=25, best_of=1, workers=4,timeout=10,seed=5))
+        print(tester.test_batch([deck], num_games=25, best_of=1, workers=8,timeout=10))
         et = time.perf_counter() - t
         times.append(et)
     print(times)
