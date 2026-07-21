@@ -9,7 +9,7 @@ import torch
 import numpy as np
 
 from SL.NN import ContextualDraftScorer, DraftScorer
-from RL.deckbuilding import build_deck, load_ratings_table
+from RL.Deckbuilding import build_deck, load_ratings_table
 from RL.draft_env import draft_env
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
