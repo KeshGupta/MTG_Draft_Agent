@@ -1,4 +1,4 @@
-# deckbuilding.py  — now a function, conversion at the top
+# deckbuilding.py - now a function, conversion at the top
 import pandas as pd
 import numpy as np
 import re
@@ -15,7 +15,7 @@ COLOR_ORDER = ["W", "U", "B", "R", "G"]
 COLORLESS_LAND = "Wastes"
 
 def load_ratings_table(ratings_path, cards_path, min_games=200):
-    """Build the name→(GIH WR, cmc) table once, at startup."""
+    """Build the name-to-(GIH WR, cmc) table once, at startup."""
     ratings = pd.read_csv(ratings_path)
     cards   = pd.read_json(cards_path)
     ratings = ratings[["Name", "Color", "GIH WR", "# GIH"]].copy()
@@ -85,7 +85,7 @@ def add_basic_lands(spells, table, total_lands=17):
 
 
 def build_deck(final_pool, index_to_card, table, add_lands=True, total_lands=17):
-    # ---- Seam B: vector → names (the ONLY conversion in here) ----
+    # ---- Seam B: vector to names (the ONLY conversion in here) ----
     details = table.set_index("Name", drop=False)
     pool_rows = []
     for card_index, count in enumerate(final_pool):
