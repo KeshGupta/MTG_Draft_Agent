@@ -7,12 +7,12 @@ from NN import ContextualDraftScorer, DraftScorer
 
 ROOT = Path(__file__).resolve().parent
 CHECKPOINT = ROOT / "models" / "draft_scorer_best.pt"
+last_pick = False
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 checkpoint = torch.load(CHECKPOINT, map_location=device)
 card_names = checkpoint["card_names"]
-print(card_names)
 card_to_index = {name: i for i, name in enumerate(card_names)}
 
 model_name = checkpoint.get("model_name", "contextual")
@@ -28,54 +28,124 @@ model.to(device)
 model.eval()
 
 
-def recommend_pick(pool_cards, pack_cards, pack_number, pick_number, top_k=5):
-    pool_counts = torch.zeros(1, len(card_names), device=device)
-    pack_counts = torch.zeros(1, len(card_names), device=device)
+def counts_from_names(cards):
+    counts = torch.zeros(1, len(card_names), device=device)
+    for card in cards:
+        counts[0, card_to_index[card]] += 1
+    return counts
 
-    for card in pool_cards:
-        pool_counts[0, card_to_index[card]] += 1
 
-    for card in pack_cards:
-        pack_counts[0, card_to_index[card]] += 1
+def print_cards(title, counts):
+    print(f"\n{title} ({int(counts.sum().item())} cards):")
+    counts = counts.detach().cpu().numpy().astype(int)
+    for i, count in enumerate(counts):
+        if count:
+            print(f"{count}x {card_names[i]}")
 
+
+def choose_pick(pool_cards, pack_cards, pack_number, pick_number):
+    pool_counts = counts_from_names(pool_cards)
+    pack_counts = counts_from_names(pack_cards)
     pack_number = torch.tensor([pack_number], device=device)
     pick_number = torch.tensor([pick_number], device=device)
 
     with torch.no_grad():
-        logits = model(pool_counts, pack_counts, pack_number, pick_number)
+        if model_name == "draftscorer":
+            logits = model(
+                pool_counts,
+                pack_counts,
+                pack_number,
+                pick_number,
+                deck_counts=torch.zeros_like(pool_counts),
+                phases=torch.zeros(1, device=device),
+                build_steps=torch.zeros(1, device=device),
+                legal_mask=pack_counts > 0,
+            )
+        else:
+            logits = model(pool_counts, pack_counts, pack_number, pick_number)
+
         probs = torch.softmax(logits, dim=1)
-        values, indices = probs.topk(top_k, dim=1)
+        pickable = torch.nonzero(pack_counts[0] > 0, as_tuple=False).squeeze(1)
+        values = probs[0, pickable]
+        order = torch.argsort(values, descending=True)
 
     return [
-        (card_names[i], float(score))
-        for i, score in zip(indices[0].tolist(), values[0].tolist())
+        (card_names[int(pickable[i].item())], float(values[i].item()))
+        for i in order
     ]
 
 
+def build_deck(final_pool_counts, target_size=23):
+    if model_name != "draftscorer":
+        raise RuntimeError("Deckbuilding requires a draftscorer checkpoint.")
+    if int(final_pool_counts.sum().item()) < target_size:
+        raise ValueError(f"Final pool only has {int(final_pool_counts.sum().item())} cards, cannot build {target_size}.")
+
+    pool_counts = final_pool_counts.clone().to(device)
+    deck_counts = torch.zeros_like(pool_counts)
+    pack_counts = torch.zeros_like(pool_counts)
+    pack_number = torch.tensor([2], device=device)
+    pick_number = torch.tensor([13], device=device)
+
+    while int(deck_counts.sum().item()) < target_size:
+        build_step = torch.tensor([int(deck_counts.sum().item())], dtype=torch.float32, device=device)
+        with torch.no_grad():
+            logits = model(
+                pool_counts,
+                pack_counts,
+                pack_number,
+                pick_number,
+                deck_counts=deck_counts,
+                phases=torch.ones(1, device=device),
+                build_steps=build_step,
+                legal_mask=pool_counts > deck_counts,
+            )
+            add_index = int(logits.argmax(1).item())
+
+        deck_counts[0, add_index] += 1
+    return deck_counts.squeeze(0)
+
+
 pack = [
-    "Planar Engineering",
-    "Thunderdrum Soloist",
-    "Eternal Student",
-    "Landscape Painter",
-    "Expressive Firedancer",
-    "Stone Docent",
-    "Adventurous Eater",
-    "Pull from the Grave",
-    "Sneering Shadewriter",
-    "Fields of Strife",
+    "Graduation Day",
+    "Ennis, Debate Moderator",
+    "Knockout Maneuver",
+    "Spiritcall Enthusiast",
+    "Primary Research",
+    "Melancholic Poet",
+    "Rubble Rouser",
+    "Seize the Spoils",
+    "Imperious Inkmage",
+    "Efflorescence",
+    "Elemental Mascot",
+    "Forest",
 ]
 
 pool = [
-    "Tome Blast",
-    "Snarl Song",
+    "Conciliator's Duelist",
+    "End of the Hunt",
 ]
 
-picks = recommend_pick(
+pick_options = choose_pick(
     pool_cards=pool,
     pack_cards=pack,
     pack_number=0,
     pick_number=2,
 )
+pick, score = pick_options[0]
 
-for card, score in picks:
-    print(f"{card}: {score:.3f}")
+print("Pick probabilities:")
+for card, probability in pick_options:
+    print(f"{card}: {probability:.3f}")
+
+print(f"\nModel pick: {pick} ({score:.3f})")
+
+if last_pick:
+    if model_name != "draftscorer":
+        print("This checkpoint does not support deckbuilding.")
+    else:
+        final_pool_counts = counts_from_names(pool)
+        final_pool_counts[0, card_to_index[pick]] += 1
+
+        deck = build_deck(final_pool_counts, target_size=model_kwargs.get("target_deck_size", 23))
+        print_cards("Deck after draft", deck)

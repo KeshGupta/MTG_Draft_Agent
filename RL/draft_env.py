@@ -86,6 +86,7 @@ class draft_env(gym.Env):
             "pack_counts": self.packs[self.pack_number].copy(),
             "pack_number": self.pack_number,
             "pick_number": self.pick_number
+        # Increase to new model
         }
     
     def get_mask(self):
@@ -117,6 +118,7 @@ class draft_env(gym.Env):
 
         # Reward function
         reward = 0
+        # Win_rate
 
         # Return observation dict
         if terminated == True:
