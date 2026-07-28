@@ -17,6 +17,7 @@ class DraftScorer(nn.Module):
         max_pool_size=45,
         max_pack_size=15,
         target_deck_size=40,
+        basic_land_indices=None,
         **_,
     ):
         super().__init__()
@@ -27,6 +28,13 @@ class DraftScorer(nn.Module):
         self.max_pool_size = max_pool_size
         self.max_pack_size = max_pack_size
         self.target_deck_size = target_deck_size
+        basic_land_mask = torch.zeros(num_cards, dtype=torch.bool)
+        if basic_land_indices is not None:
+            for index in basic_land_indices:
+                index = int(index)
+                if 0 <= index < num_cards:
+                    basic_land_mask[index] = True
+        self.register_buffer("basic_land_mask", basic_land_mask, persistent=False)
 
         self.net = nn.Sequential(
             nn.LayerNorm(num_cards * 3 + 7),
@@ -49,6 +57,7 @@ class DraftScorer(nn.Module):
         phases=None,
         build_steps=None,
         legal_mask=None,
+        basic_land_mask=None,
     ):
         pool_counts = pool_counts.float()
         pack_counts = pack_counts.float()
@@ -91,6 +100,13 @@ class DraftScorer(nn.Module):
         if legal_mask is None:
             draft_mask = pack_counts > 0
             build_mask = pool_counts > deck_counts
+            if basic_land_mask is None:
+                basic_land_mask = self.basic_land_mask
+            else:
+                basic_land_mask = torch.as_tensor(basic_land_mask, dtype=torch.bool, device=device)
+            if basic_land_mask.ndim == 1:
+                basic_land_mask = basic_land_mask.view(1, -1)
+            build_mask = build_mask | basic_land_mask
             legal_mask = torch.where(phases[:, None] > 0.5, build_mask, draft_mask)
         else:
             legal_mask = legal_mask.bool()

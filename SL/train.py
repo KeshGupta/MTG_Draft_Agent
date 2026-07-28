@@ -42,7 +42,7 @@ HIDDEN_DIM = 256
 SYNERGY_DIM = 64
 DROPOUT = 0.15
 GRAD_CLIP = 1.0
-TARGET_DECK_SIZE = 23
+TARGET_DECK_SIZE = 40
 MAX_BUILD_STEPS = TARGET_DECK_SIZE
 MAX_POOL_SIZE = 45
 MAX_PACK_SIZE = 15
@@ -62,6 +62,9 @@ USE_CARD_FEATURES = True
 CHOICE_WEIGHTING = True
 TRAIN_DRAFT_PHASE = True
 TRAIN_BUILD_PHASE = True
+BASIC_LAND_NAMES = ("Plains", "Island", "Swamp", "Mountain", "Forest", "Wastes")
+DECK_TARGET_KEY = "deck_counts"
+HAS_DECK_KEY = "has_deck"
 
 QUICK = False                 # one short epoch on a few chunks
 QUICK_CHUNKS = 3
@@ -245,20 +248,24 @@ def validation_mask(rows: int, chunk_index: int, val_fraction: float) -> np.ndar
 
 def has_deck_targets(path: Path) -> bool:
     with np.load(path) as data:
-        return {"deck_spell_counts", "has_deck"}.issubset(data.files)
+        return {DECK_TARGET_KEY, HAS_DECK_KEY}.issubset(data.files)
 
 
 def should_train_build(chunks: list[Path]) -> bool:
     return MODEL == "draftscorer" and TRAIN_BUILD_PHASE and bool(chunks) and has_deck_targets(chunks[0])
 
 
-def build_example_count(x: np.ndarray, y: np.ndarray, deck_spell_counts: np.ndarray, has_deck: np.ndarray, rows: np.ndarray, cards: int) -> int:
+def basic_land_mask(card_names: list[str]) -> np.ndarray:
+    return np.asarray([card_name in BASIC_LAND_NAMES for card_name in card_names], dtype=np.bool_)
+
+
+def build_example_count(deck_counts: np.ndarray, has_deck: np.ndarray, rows: np.ndarray) -> int:
     if rows.size == 0:
         return 0
     deck_rows = rows[has_deck[rows]]
     if deck_rows.size == 0:
         return 0
-    return int(deck_spell_counts[deck_rows].sum())
+    return int(deck_counts[deck_rows].sum())
 
 
 def split_summary(chunks: list[Path], cards: int, val_fraction: float, batch_size: int, train_build: bool) -> tuple[int, int, int, int]:
@@ -276,9 +283,9 @@ def split_summary(chunks: list[Path], cards: int, val_fraction: float, batch_siz
                 train_batches += math.ceil(train_rows.size / batch_size) if train_rows.size else 0
                 val_batches += math.ceil(val_rows.size / batch_size) if val_rows.size else 0
 
-            if train_build and {"deck_spell_counts", "has_deck"}.issubset(data.files):
-                train_build_examples = build_example_count(x, y, data["deck_spell_counts"], data["has_deck"], train_rows, cards)
-                val_build_examples = build_example_count(x, y, data["deck_spell_counts"], data["has_deck"], val_rows, cards)
+            if train_build and {DECK_TARGET_KEY, HAS_DECK_KEY}.issubset(data.files):
+                train_build_examples = build_example_count(data[DECK_TARGET_KEY], data[HAS_DECK_KEY], train_rows)
+                val_build_examples = build_example_count(data[DECK_TARGET_KEY], data[HAS_DECK_KEY], val_rows)
                 train += train_build_examples
                 val += val_build_examples
                 train_batches += math.ceil(train_build_examples / batch_size) if train_build_examples else 0
@@ -306,7 +313,7 @@ def make_draft_batch(x: np.ndarray, y: np.ndarray, rows: np.ndarray, cards: int)
 def make_build_examples(
     x: np.ndarray,
     y: np.ndarray,
-    deck_spell_counts: np.ndarray,
+    deck_counts: np.ndarray,
     has_deck: np.ndarray,
     rows: np.ndarray,
     cards: int,
@@ -318,7 +325,7 @@ def make_build_examples(
     for row in rows[has_deck[rows]]:
         pool = x[row, pool_start:pool_stop].astype(np.uint8, copy=True)
         pool[int(y[row])] += 1
-        target = deck_spell_counts[row].astype(np.uint8, copy=False)
+        target = deck_counts[row].astype(np.uint8, copy=False)
         deck = np.zeros(cards, dtype=np.uint8)
         step = 0
 
@@ -381,8 +388,8 @@ def iter_phase_batches(
                 for start in range(0, len(rows), batch_size):
                     batches.append(make_draft_batch(x, y, rows[start : start + batch_size], cards))
 
-            if train_build and {"deck_spell_counts", "has_deck"}.issubset(data.files):
-                build_examples = make_build_examples(x, y, data["deck_spell_counts"], data["has_deck"], rows, cards)
+            if train_build and {DECK_TARGET_KEY, HAS_DECK_KEY}.issubset(data.files):
+                build_examples = make_build_examples(x, y, data[DECK_TARGET_KEY], data[HAS_DECK_KEY], rows, cards)
                 if build_examples is not None:
                     build_rows = np.arange(build_examples["pool"].shape[0])
                     if split == "train":
@@ -404,7 +411,11 @@ def iter_phase_batches(
                 yield batch
 
 
-def unpack_batch(batch: dict[str, np.ndarray], device: torch.device) -> tuple[dict[str, torch.Tensor], torch.Tensor | None, torch.Tensor | None, torch.Tensor]:
+def unpack_batch(
+    batch: dict[str, np.ndarray],
+    device: torch.device,
+    basic_land_mask_tensor: torch.Tensor,
+) -> tuple[dict[str, torch.Tensor], torch.Tensor | None, torch.Tensor | None, torch.Tensor]:
     tensors = {
         "pool": torch.as_tensor(batch["pool"], dtype=torch.float32, device=device),
         "pack": torch.as_tensor(batch["pack"], dtype=torch.float32, device=device),
@@ -416,7 +427,8 @@ def unpack_batch(batch: dict[str, np.ndarray], device: torch.device) -> tuple[di
     }
     targets = None if batch["targets"] is None else torch.as_tensor(batch["targets"], dtype=torch.long, device=device)
     target_mask = None if batch["target_mask"] is None else torch.as_tensor(batch["target_mask"], dtype=torch.bool, device=device)
-    legal_mask = torch.where(tensors["phase"][:, None] > 0.5, tensors["pool"] > tensors["deck"], tensors["pack"] > 0)
+    build_mask = (tensors["pool"] > tensors["deck"]) | basic_land_mask_tensor.view(1, -1)
+    legal_mask = torch.where(tensors["phase"][:, None] > 0.5, build_mask, tensors["pack"] > 0)
     return tensors, targets, target_mask, legal_mask
 
 
@@ -478,6 +490,7 @@ def run_epoch(
     val_fraction: float,
     max_batches: int | None,
     train_build: bool,
+    basic_land_mask_tensor: torch.Tensor,
 ) -> dict[str, float]:
     training = opt is not None
     model.train(training)
@@ -485,7 +498,7 @@ def run_epoch(
     split = "train" if training else "val"
 
     for step, batch in enumerate(iter_phase_batches(chunks, cards, batch_size, val_fraction, epoch, split, max_batches, train_build), 1):
-        inputs, targets, target_mask, mask = unpack_batch(batch, device)
+        inputs, targets, target_mask, mask = unpack_batch(batch, device, basic_land_mask_tensor)
         with torch.set_grad_enabled(training), amp_context(device, USE_AMP and training):
             logits = logits_for(model, inputs, mask)
             loss = masked_cross_entropy(
@@ -524,7 +537,7 @@ def run_epoch(
     return result
 
 
-def make_model(cards: int, features: torch.Tensor) -> tuple[nn.Module, dict[str, Any]]:
+def make_model(cards: int, features: torch.Tensor, basic_land_indices: list[int]) -> tuple[nn.Module, dict[str, Any]]:
     if MODEL == "draftscorer":
         kwargs = {
             "num_cards": cards,
@@ -535,6 +548,7 @@ def make_model(cards: int, features: torch.Tensor) -> tuple[nn.Module, dict[str,
             "max_pool_size": MAX_POOL_SIZE,
             "max_pack_size": MAX_PACK_SIZE,
             "target_deck_size": TARGET_DECK_SIZE,
+            "basic_land_indices": basic_land_indices,
         }
         return DraftScorer(**kwargs), kwargs
     kwargs = {
@@ -627,18 +641,23 @@ def main() -> int:
     metadata = load_json(DATA_DIR / "metadata.json")
     card_names = metadata["card_names"]
     cards = len(card_names)
+    basic_mask = basic_land_mask(card_names)
+    basic_land_indices = np.flatnonzero(basic_mask).astype(int).tolist()
     chunks = draft_chunk_paths(DATA_DIR)[:limit_chunks]
     if not chunks:
         raise FileNotFoundError(f"No draft_xy_chunk_*.npz files found in {DATA_DIR}")
     train_build = should_train_build(chunks)
+    if train_build and not basic_land_indices:
+        raise ValueError("Build-phase training requires basic lands to be present in metadata card_names.")
 
     train_rows, val_rows, train_batches, val_batches = split_summary(chunks, cards, VAL_FRACTION, batch_size, train_build)
     train_batches = min(train_batches, max_train_batches) if max_train_batches is not None else train_batches
     val_batches = min(val_batches, max_val_batches) if max_val_batches is not None else val_batches
 
     features, feature_names, feature_match = build_card_features(card_names)
-    model, model_kwargs = make_model(cards, features)
+    model, model_kwargs = make_model(cards, features, basic_land_indices)
     model = model.to(device)
+    basic_land_mask_tensor = torch.as_tensor(basic_mask, dtype=torch.bool, device=device)
     opt = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
     scheduler = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=LR, total_steps=max(train_batches * epochs, 1), pct_start=0.08, div_factor=10.0, final_div_factor=50.0)
     scaler = torch.amp.GradScaler("cuda") if use_amp else None
@@ -654,6 +673,7 @@ def main() -> int:
     print(f"data: {DATA_DIR}")
     print(f"phases: draft={TRAIN_DRAFT_PHASE}, build={train_build}")
     print(f"cards: {cards}")
+    print(f"basic land actions: {len(basic_land_indices)}")
     print(f"chunks: {len(chunks)}")
     print(f"examples: train {train_rows:,}, val {val_rows:,}")
     print(f"batches/epoch: train {train_batches:,}, val {val_batches:,}")
@@ -662,8 +682,8 @@ def main() -> int:
 
     for epoch in range(start_epoch, epochs):
         print(f"\nEpoch {epoch + 1}/{epochs}")
-        train = run_epoch(model, opt, scheduler, scaler, device, chunks, cards, epoch, batch_size, VAL_FRACTION, max_train_batches, train_build)
-        val = run_epoch(model, None, None, None, device, chunks, cards, epoch, batch_size, VAL_FRACTION, max_val_batches, train_build)
+        train = run_epoch(model, opt, scheduler, scaler, device, chunks, cards, epoch, batch_size, VAL_FRACTION, max_train_batches, train_build, basic_land_mask_tensor)
+        val = run_epoch(model, None, None, None, device, chunks, cards, epoch, batch_size, VAL_FRACTION, max_val_batches, train_build, basic_land_mask_tensor)
         print(format_metrics("train", train))
         print(format_metrics("val  ", val))
 

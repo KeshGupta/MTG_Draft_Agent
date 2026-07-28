@@ -8,12 +8,18 @@ from NN import ContextualDraftScorer, DraftScorer
 ROOT = Path(__file__).resolve().parent
 CHECKPOINT = ROOT / "models" / "draft_scorer_best.pt"
 last_pick = False
+FULL_DECK_SIZE = 40
+BASIC_LAND_NAMES = {"Plains", "Island", "Swamp", "Mountain", "Forest", "Wastes"}
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 checkpoint = torch.load(CHECKPOINT, map_location=device)
 card_names = checkpoint["card_names"]
 card_to_index = {name: i for i, name in enumerate(card_names)}
+basic_land_mask = torch.zeros(1, len(card_names), dtype=torch.bool, device=device)
+for basic_name in BASIC_LAND_NAMES:
+    if basic_name in card_to_index:
+        basic_land_mask[0, card_to_index[basic_name]] = True
 
 model_name = checkpoint.get("model_name", "contextual")
 model_kwargs = checkpoint["model_kwargs"]
@@ -25,6 +31,8 @@ else:
 
 model.load_state_dict(checkpoint["model_state"])
 model.to(device)
+if model_name == "draftscorer":
+    model.target_deck_size = max(FULL_DECK_SIZE, int(getattr(model, "target_deck_size", FULL_DECK_SIZE)))
 model.eval()
 
 
@@ -75,11 +83,11 @@ def choose_pick(pool_cards, pack_cards, pack_number, pick_number):
     ]
 
 
-def build_deck(final_pool_counts, target_size=23):
+def build_deck(final_pool_counts, target_size=FULL_DECK_SIZE):
     if model_name != "draftscorer":
         raise RuntimeError("Deckbuilding requires a draftscorer checkpoint.")
-    if int(final_pool_counts.sum().item()) < target_size:
-        raise ValueError(f"Final pool only has {int(final_pool_counts.sum().item())} cards, cannot build {target_size}.")
+    if target_size <= 0:
+        raise ValueError(f"Target deck size must be positive, got {target_size}.")
 
     pool_counts = final_pool_counts.clone().to(device)
     deck_counts = torch.zeros_like(pool_counts)
@@ -98,7 +106,7 @@ def build_deck(final_pool_counts, target_size=23):
                 deck_counts=deck_counts,
                 phases=torch.ones(1, device=device),
                 build_steps=build_step,
-                legal_mask=pool_counts > deck_counts,
+                legal_mask=(pool_counts > deck_counts) | basic_land_mask,
             )
             add_index = int(logits.argmax(1).item())
 
@@ -147,5 +155,6 @@ if last_pick:
         final_pool_counts = counts_from_names(pool)
         final_pool_counts[0, card_to_index[pick]] += 1
 
-        deck = build_deck(final_pool_counts, target_size=model_kwargs.get("target_deck_size", 23))
+        target_size = max(FULL_DECK_SIZE, int(model_kwargs.get("target_deck_size", FULL_DECK_SIZE)))
+        deck = build_deck(final_pool_counts, target_size=target_size)
         print_cards("Deck after draft", deck)

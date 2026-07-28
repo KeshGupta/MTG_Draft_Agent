@@ -1794,10 +1794,11 @@
       "source_rows": "Rows where has_deck is true.",
       "initial_pool": "X pool columns plus one count at y.",
       "initial_deck_counts": "zeros",
-      "target_deck_counts": "deck_spell_counts",
+      "target_deck_counts": "deck_counts",
+      "spell_target_deck_counts": "deck_spell_counts",
       "target_mask": "current deck_counts < target_deck_counts",
-      "legal_mask": "pool_counts > deck_counts",
-      "action_meaning": "add this card from the completed pool to the current deck",
+      "legal_mask": "pool_counts > deck_counts OR action is a generated basic land.",
+      "action_meaning": "add this drafted card from the completed pool or append a basic land to the current deck",
       "stop_condition": "deck_counts == target_deck_counts"
     }
   }
