@@ -3,7 +3,7 @@ from collections import Counter
 
 import numpy as np
 
-from deckbuilding import BASIC_LANDS, COLORLESS_LAND, build_deck, load_ratings_table
+from SL.util.deckbuilding import BASIC_LANDS, COLORLESS_LAND, build_deck, load_ratings_table
 
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -2,13 +2,15 @@ import subprocess
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+import random
+import shutil
 import time
 
 class deck_tester:
     def __init__(self):
         self.base_dir = Path(__file__).resolve().parent
         self.test_dir = self.base_dir / "test"
-        self.pool_dir = self.base_dir / "pool"
+        self.pool_dir = self.base_dir / "7win_pool"
         self.java_exe = Path(r"C:\Users\samth\.jdks\ms-17.0.19\bin\java.exe")
         self.jar_file = self.base_dir / "forge-gui-desktop-2.0.14-SNAPSHOT-jar-with-dependencies.jar"
         self.working_dir = Path(r"C:\Users\samth\Downloads\forge\forge-gui")
@@ -44,6 +46,100 @@ class deck_tester:
             total["wins"] * 100.0 / total["matches"] if total["matches"] else 0.0
             for total in totals
         ]
+
+    def test_batch_against_pool(
+        self,
+        decks,
+        opponents_per_deck=4,
+        games_per_opponent=20,
+        best_of=1,
+        timeout=300,
+        seed=None,
+        workers=8,
+        return_details=False,
+    ):
+        """Test each deck against the same sampled pool decks.
+
+        Returns one win-rate percentage per submitted deck. Each generated deck
+        is run against the same ``opponents_per_deck`` opponent .dck files for
+        ``games_per_opponent`` games each.
+        """
+        if not decks:
+            return []
+        if opponents_per_deck <= 0:
+            raise ValueError("opponents_per_deck must be positive.")
+        if games_per_opponent <= 0:
+            raise ValueError("games_per_opponent must be positive.")
+        if best_of != 1:
+            raise ValueError("Raw game-count rewards require best_of=1.")
+
+        opponent_decks = sorted(self.pool_dir.glob("*.dck"))
+        if len(opponent_decks) < opponents_per_deck:
+            raise ValueError(
+                f"Need at least {opponents_per_deck} opponent decks in {self.pool_dir}, "
+                f"found {len(opponent_decks)}."
+            )
+
+        rng = random.Random(seed)
+        sampled_opponents = rng.sample(opponent_decks, opponents_per_deck)
+        jobs = []
+        for deck_index, deck in enumerate(decks):
+            for opponent_index, opponent_path in enumerate(sampled_opponents):
+                jobs.append({
+                    "job_id": len(jobs),
+                    "deck_index": deck_index,
+                    "deck": deck,
+                    "deck_name": f"deck_{deck_index:04d}_opp_{opponent_index:02d}",
+                    "opponent_index": opponent_index,
+                    "opponent_path": opponent_path,
+                    "num_games": games_per_opponent,
+                })
+
+        totals = [
+            {"games": 0, "wins": 0, "losses": 0, "ties": 0}
+            for _ in decks
+        ]
+        matchup_details = [
+            []
+            for _ in decks
+        ]
+
+        with ThreadPoolExecutor(max_workers=max(1, workers)) as executor:
+            futures = [
+                executor.submit(self._run_matchup_job, job, best_of, timeout, seed)
+                for job in jobs
+            ]
+            for future in as_completed(futures):
+                deck_index, stats = future.result()
+                totals[deck_index]["games"] += stats["games"]
+                totals[deck_index]["wins"] += stats["wins"]
+                totals[deck_index]["losses"] += stats["losses"]
+                totals[deck_index]["ties"] += stats["ties"]
+                matchup_details[deck_index].append(stats)
+
+        win_rates = [
+            total["wins"] * 100.0 / total["games"] if total["games"] else 0.0
+            for total in totals
+        ]
+        if not return_details:
+            return win_rates
+
+        return {
+            "win_rates": win_rates,
+            "opponents": [path.name for path in sampled_opponents],
+            "per_deck": [
+                {
+                    "deck_index": deck_index,
+                    "games": total["games"],
+                    "wins": total["wins"],
+                    "losses": total["losses"],
+                    "ties": total["ties"],
+                    "win_rate": win_rates[deck_index] / 100.0,
+                    "matchups": sorted(matchup_details[deck_index], key=lambda row: row["opponent_index"]),
+                }
+                for deck_index, total in enumerate(totals)
+            ],
+        }
 
     def _run_deck_job(self, job, best_of, timeout, seed):
         worker_test_dir = self.base_dir / "worker_tests" / f"job_{job['job_id']:03d}"
@@ -94,6 +190,71 @@ class deck_tester:
             (deck_index, results_by_deck[deck_name])
             for deck_index, deck_name in deck_names
         ]
+
+    def _run_matchup_job(self, job, best_of, timeout, seed):
+        worker_dir = self.base_dir / "worker_tests" / "matchups" / f"job_{job['job_id']:04d}"
+        worker_test_dir = worker_dir / "test"
+        worker_pool_dir = worker_dir / "pool"
+        self.clear_deck_dir(worker_test_dir)
+        self.clear_deck_dir(worker_pool_dir)
+
+        self.write_deck(worker_test_dir, job["deck_name"], job["deck"])
+        games = int(job["num_games"])
+        for game_index in range(games):
+            opponent_copy = worker_pool_dir / f"{job['opponent_path'].stem}_game_{game_index:03d}.dck"
+            shutil.copy2(job["opponent_path"], opponent_copy)
+
+        command = [
+            str(self.java_exe),
+            "-Xmx1536m",
+            "-jar",
+            str(self.jar_file),
+            "sim",
+            "-t",
+            "DeckTest",
+            "-testDir",
+            str(worker_test_dir),
+            "-poolDir",
+            str(worker_pool_dir),
+            "-s",
+            str(games),
+            "-m",
+            "1",
+            "-q",
+            "-c",
+            str(timeout),
+        ]
+
+        if seed is not None:
+            command += ["-seed", str(seed + job["job_id"])]
+
+        result = subprocess.run(
+            command,
+            cwd=self.working_dir,
+            capture_output=True,
+            text=True,
+            creationflags=subprocess.ABOVE_NORMAL_PRIORITY_CLASS,
+        )
+
+        if result.returncode != 0:
+            raise RuntimeError(f"Deck test failed with exit code {result.returncode}")
+
+        results_by_deck = self._parse_deck_results(result.stdout)
+        stats = results_by_deck[job["deck_name"]]
+        if stats["matches"] != games:
+            raise RuntimeError(
+                f"Expected {games} raw games for {job['deck_name']} vs {job['opponent_path'].name}, "
+                f"Forge reported {stats['matches']}."
+            )
+        return job["deck_index"], {
+            "opponent_index": job["opponent_index"],
+            "opponent": job["opponent_path"].name,
+            "games": stats["matches"],
+            "wins": stats["wins"],
+            "losses": stats["losses"],
+            "ties": stats["ties"],
+            "win_rate": stats["win_percentage"] / 100.0,
+        }
 
     def _make_jobs(self, decks, num_games, workers):
         if len(decks) >= workers:

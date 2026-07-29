@@ -1,0 +1,230 @@
+[
+  {
+    "update": 0,
+    "rewards": [
+      0.175,
+      0.35,
+      0.3,
+      0.125
+    ],
+    "mean_reward": 0.2375,
+    "min_reward": 0.125,
+    "max_reward": 0.35,
+    "reward_games_per_deck": 40,
+    "reward_resolution": 0.025,
+    "reward_details": {
+      "win_rates": [
+        17.5,
+        35.0,
+        30.0,
+        12.5
+      ],
+      "opponents": [
+        "5wins_8games_3losses_wr62_id027390.dck",
+        "0wins_3games_3losses_wr0_id122141.dck",
+        "0wins_3games_3losses_wr0_id021095.dck",
+        "6wins_9games_3losses_wr67_id006739.dck"
+      ],
+      "per_deck": [
+        {
+          "deck_index": 0,
+          "games": 40,
+          "wins": 7,
+          "losses": 33,
+          "ties": 0,
+          "win_rate": 0.175,
+          "matchups": [
+            {
+              "opponent_index": 0,
+              "opponent": "5wins_8games_3losses_wr62_id027390.dck",
+              "games": 10,
+              "wins": 3,
+              "losses": 7,
+              "ties": 0,
+              "win_rate": 0.3
+            },
+            {
+              "opponent_index": 1,
+              "opponent": "0wins_3games_3losses_wr0_id122141.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            },
+            {
+              "opponent_index": 2,
+              "opponent": "0wins_3games_3losses_wr0_id021095.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            },
+            {
+              "opponent_index": 3,
+              "opponent": "6wins_9games_3losses_wr67_id006739.dck",
+              "games": 10,
+              "wins": 2,
+              "losses": 8,
+              "ties": 0,
+              "win_rate": 0.2
+            }
+          ]
+        },
+        {
+          "deck_index": 1,
+          "games": 40,
+          "wins": 14,
+          "losses": 26,
+          "ties": 0,
+          "win_rate": 0.35,
+          "matchups": [
+            {
+              "opponent_index": 0,
+              "opponent": "5wins_8games_3losses_wr62_id027390.dck",
+              "games": 10,
+              "wins": 10,
+              "losses": 0,
+              "ties": 0,
+              "win_rate": 1.0
+            },
+            {
+              "opponent_index": 1,
+              "opponent": "0wins_3games_3losses_wr0_id122141.dck",
+              "games": 10,
+              "wins": 2,
+              "losses": 8,
+              "ties": 0,
+              "win_rate": 0.2
+            },
+            {
+              "opponent_index": 2,
+              "opponent": "0wins_3games_3losses_wr0_id021095.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            },
+            {
+              "opponent_index": 3,
+              "opponent": "6wins_9games_3losses_wr67_id006739.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            }
+          ]
+        },
+        {
+          "deck_index": 2,
+          "games": 40,
+          "wins": 12,
+          "losses": 28,
+          "ties": 0,
+          "win_rate": 0.3,
+          "matchups": [
+            {
+              "opponent_index": 0,
+              "opponent": "5wins_8games_3losses_wr62_id027390.dck",
+              "games": 10,
+              "wins": 8,
+              "losses": 2,
+              "ties": 0,
+              "win_rate": 0.8
+            },
+            {
+              "opponent_index": 1,
+              "opponent": "0wins_3games_3losses_wr0_id122141.dck",
+              "games": 10,
+              "wins": 2,
+              "losses": 8,
+              "ties": 0,
+              "win_rate": 0.2
+            },
+            {
+              "opponent_index": 2,
+              "opponent": "0wins_3games_3losses_wr0_id021095.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            },
+            {
+              "opponent_index": 3,
+              "opponent": "6wins_9games_3losses_wr67_id006739.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            }
+          ]
+        },
+        {
+          "deck_index": 3,
+          "games": 40,
+          "wins": 5,
+          "losses": 35,
+          "ties": 0,
+          "win_rate": 0.125,
+          "matchups": [
+            {
+              "opponent_index": 0,
+              "opponent": "5wins_8games_3losses_wr62_id027390.dck",
+              "games": 10,
+              "wins": 2,
+              "losses": 8,
+              "ties": 0,
+              "win_rate": 0.2
+            },
+            {
+              "opponent_index": 1,
+              "opponent": "0wins_3games_3losses_wr0_id122141.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            },
+            {
+              "opponent_index": 2,
+              "opponent": "0wins_3games_3losses_wr0_id021095.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            },
+            {
+              "opponent_index": 3,
+              "opponent": "6wins_9games_3losses_wr67_id006739.dck",
+              "games": 10,
+              "wins": 1,
+              "losses": 9,
+              "ties": 0,
+              "win_rate": 0.1
+            }
+          ]
+        }
+      ]
+    },
+    "transitions": 328,
+    "timing": {
+      "collect": 0.7438681000057841,
+      "eval": 164.52038529999845,
+      "train": 0.24657119999756105
+    },
+    "metrics": {
+      "policy_loss": -0.011407192097976804,
+      "value_loss": 0.0019933684961870313,
+      "entropy": 1.7187458723783493,
+      "approx_kl": 0.0002889178422265104,
+      "clip_fraction": 0.0,
+      "explained_variance": 0.8451166152954102
+    }
+  }
+]
