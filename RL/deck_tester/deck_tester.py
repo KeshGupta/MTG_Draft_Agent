@@ -10,19 +10,19 @@ class deck_tester:
     def __init__(self):
         self.base_dir = Path(__file__).resolve().parent
         self.test_dir = self.base_dir / "test"
-        self.pool_dir = self.base_dir / "7win_pool"
+        self.pool_dir = self.base_dir / "pool"
         self.java_exe = Path(r"C:\Users\samth\.jdks\ms-17.0.19\bin\java.exe")
         self.jar_file = self.base_dir / "forge-gui-desktop-2.0.14-SNAPSHOT-jar-with-dependencies.jar"
         self.working_dir = Path(r"C:\Users\samth\Downloads\forge\forge-gui")
 
-    def test_batch(self, decks, num_games=5, best_of=1, timeout=300, seed=None, workers=4):
+    def test_batch(self, decks, num_games=5, best_of=1, timeout=300, seed=None, workers=4, return_details=False):
         if not decks:
             return []
 
         workers = max(1, workers)
         jobs = self._make_jobs(decks, num_games, workers)
         totals = [
-            {"matches": 0, "wins": 0}
+            {"matches": 0, "wins": 0, "losses": 0, "ties": 0}
             for _ in decks
         ]
 
@@ -41,11 +41,38 @@ class deck_tester:
                 for deck_index, stats in future.result():
                     totals[deck_index]["matches"] += stats["matches"]
                     totals[deck_index]["wins"] += stats["wins"]
+                    totals[deck_index]["losses"] += stats["losses"]
+                    totals[deck_index]["ties"] += stats["ties"]
 
-        return [
+        for deck_index, total in enumerate(totals):
+            if total["matches"] != num_games:
+                raise RuntimeError(
+                    f"Expected {num_games} matches for deck_{deck_index:04d}, "
+                    f"Forge reported {total['matches']}."
+                )
+
+        win_rates = [
             total["wins"] * 100.0 / total["matches"] if total["matches"] else 0.0
             for total in totals
         ]
+        if not return_details:
+            return win_rates
+
+        return {
+            "win_rates": win_rates,
+            "per_deck": [
+                {
+                    "deck_index": deck_index,
+                    "matches": total["matches"],
+                    "expected_matches": num_games,
+                    "wins": total["wins"],
+                    "losses": total["losses"],
+                    "ties": total["ties"],
+                    "win_rate": win_rates[deck_index] / 100.0,
+                }
+                for deck_index, total in enumerate(totals)
+            ],
+        }
 
     def test_batch_against_pool(
         self,
@@ -183,9 +210,20 @@ class deck_tester:
         )
 
         if result.returncode != 0:
-            raise RuntimeError(f"Deck test failed with exit code {result.returncode}")
+            raise RuntimeError(
+                f"Deck test failed with exit code {result.returncode}\n"
+                f"STDOUT:\n{result.stdout[-2000:]}\n"
+                f"STDERR:\n{result.stderr[-2000:]}"
+            )
 
         results_by_deck = self._parse_deck_results(result.stdout)
+        missing = [deck_name for _, deck_name in deck_names if deck_name not in results_by_deck]
+        if missing:
+            raise RuntimeError(
+                f"Forge output did not include results for {missing}. "
+                f"Parsed decks: {sorted(results_by_deck)}\n"
+                f"STDOUT:\n{result.stdout[-2000:]}"
+            )
         return [
             (deck_index, results_by_deck[deck_name])
             for deck_index, deck_name in deck_names
@@ -237,7 +275,11 @@ class deck_tester:
         )
 
         if result.returncode != 0:
-            raise RuntimeError(f"Deck test failed with exit code {result.returncode}")
+            raise RuntimeError(
+                f"Deck test failed with exit code {result.returncode}\n"
+                f"STDOUT:\n{result.stdout[-2000:]}\n"
+                f"STDERR:\n{result.stderr[-2000:]}"
+            )
 
         results_by_deck = self._parse_deck_results(result.stdout)
         stats = results_by_deck[job["deck_name"]]
@@ -311,13 +353,16 @@ class deck_tester:
                 continue
 
             deck_name = " ".join(parts[:-5])
-            deck_results[deck_name] = {
-                "matches": int(parts[-5]),
-                "wins": int(parts[-4]),
-                "losses": int(parts[-3]),
-                "ties": int(parts[-2]),
-                "win_percentage": float(parts[-1]),
-            }
+            try:
+                deck_results[deck_name] = {
+                    "matches": int(parts[-5]),
+                    "wins": int(parts[-4]),
+                    "losses": int(parts[-3]),
+                    "ties": int(parts[-2]),
+                    "win_percentage": float(parts[-1]),
+                }
+            except ValueError as exc:
+                raise RuntimeError(f"Could not parse Forge deck result line: {line!r}") from exc
 
         return deck_results
 

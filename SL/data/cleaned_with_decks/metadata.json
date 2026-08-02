@@ -1748,30 +1748,110 @@
     "345": "Zombify"
   },
   "deckbuilder_targets": {
-    "source": "RL.deckbuilding.build_deck",
-    "input_dir": "C:\\Users\\samth\\source\\repos\\MTG_Draft_Agent\\SL\\data\\cleaned",
-    "ratings_path": "C:\\Users\\samth\\source\\repos\\MTG_Draft_Agent\\card-ratings-2026-07-14 (1).csv",
-    "cards_path": "C:\\Users\\samth\\source\\repos\\MTG_Draft_Agent\\SOS_cards.json",
+    "source": "17Lands game_data deck_* columns",
+    "selection": "latest game row per draft_id by game_time, then match_number, game_number, build_index",
+    "draft_csv": "C:\\Users\\samth\\Downloads\\draft_data_public.SOS.PremierDraft.csv\\draft_data_public.SOS.PremierDraft.csv",
+    "game_csv": "C:\\Users\\samth\\Downloads\\game_data_public.SOS.PremierDraft.csv\\game_data_public.SOS.PremierDraft.csv",
+    "data_dir": "C:\\Users\\samth\\source\\repos\\MTG_Draft_Agent\\SL\\data\\cleaned_with_decks",
     "card_index_source": "Same metadata card_names order used by X/y and the neural network.",
     "deck_counts_key": "deck_counts",
     "deck_spell_counts_key": "deck_spell_counts",
     "has_deck_key": "has_deck",
+    "deck_spell_counts_meaning": "Actual main deck with generated basic lands zeroed out.",
+    "chunksize": 100000,
+    "min_match_wins": 5,
     "complete_pool_size": 42,
-    "expected_spell_count": 23,
-    "total_lands": 17,
-    "expected_deck_size": 40,
-    "generated_basic_lands": {
-      "W": "Plains",
-      "U": "Island",
-      "B": "Swamp",
-      "R": "Mountain",
-      "G": "Forest"
-    },
-    "colorless_land": "Wastes",
     "chunks_written": 46,
-    "rows_with_complete_pool": 16671,
-    "rows_with_decks": 16671,
-    "invalid_rows": 0
+    "build_count_distribution_per_draft": {
+      "1": 13926,
+      "2": 2273,
+      "3": 390,
+      "4": 61,
+      "5": 11,
+      "6": 1
+    },
+    "terminal_rows": 16671,
+    "rows_with_decks": 16660,
+    "missing_game_rows": 9,
+    "invalid_pool_rows": 2,
+    "invalid_examples": [
+      {
+        "draft_id": "cc35671d65ea49ae97ed1a40db605785",
+        "chunk": "draft_xy_chunk_0007.npz",
+        "row": 16001,
+        "bad_cards": [
+          "Bitter Triumph deck=1 pool=0"
+        ]
+      },
+      {
+        "draft_id": "0e9a9f6892cd46eda0e982ee3e6a2374",
+        "chunk": "draft_xy_chunk_0016.npz",
+        "row": 6677,
+        "bad_cards": [
+          "Forum of Amity deck=1 pool=0"
+        ]
+      }
+    ],
+    "deck_size_distribution": {
+      "40": 15564,
+      "41": 952,
+      "42": 64,
+      "43": 43,
+      "44": 11,
+      "45": 11,
+      "46": 6,
+      "47": 1,
+      "48": 1,
+      "49": 1,
+      "50": 2,
+      "51": 2,
+      "52": 1,
+      "53": 1
+    },
+    "drafted_card_count_distribution": {
+      "20": 1,
+      "22": 15,
+      "23": 1860,
+      "24": 4286,
+      "25": 4173,
+      "26": 2841,
+      "27": 1631,
+      "28": 1030,
+      "29": 487,
+      "30": 222,
+      "31": 69,
+      "32": 34,
+      "33": 8,
+      "34": 1,
+      "35": 2
+    },
+    "basic_land_count_distribution": {
+      "7": 2,
+      "8": 27,
+      "9": 57,
+      "10": 182,
+      "11": 452,
+      "12": 957,
+      "13": 1586,
+      "14": 2765,
+      "15": 4154,
+      "16": 4424,
+      "17": 2026,
+      "18": 23,
+      "19": 2,
+      "20": 3
+    },
+    "selected_build_index_distribution": {
+      "0": 13118,
+      "1": 2757,
+      "2": 620,
+      "3": 120,
+      "4": 31,
+      "5": 8,
+      "6": 4,
+      "9": 1,
+      "13": 1
+    }
   },
   "phase_aware_training": {
     "model_class": "SL.NN.DraftScorer",
@@ -1791,7 +1871,7 @@
       "action_meaning": "pick this card from the current pack"
     },
     "build_phase": {
-      "source_rows": "Rows where has_deck is true.",
+      "source_rows": "Rows where has_deck is true after joining actual game_data decks.",
       "initial_pool": "X pool columns plus one count at y.",
       "initial_deck_counts": "zeros",
       "target_deck_counts": "deck_counts",
@@ -1799,7 +1879,113 @@
       "target_mask": "current deck_counts < target_deck_counts",
       "legal_mask": "pool_counts > deck_counts OR action is a generated basic land.",
       "action_meaning": "add this drafted card from the completed pool or append a basic land to the current deck",
-      "stop_condition": "deck_counts == target_deck_counts"
+      "stop_condition": "deck_counts == target_deck_counts; actual deck sizes are not forced to 40."
+    }
+  },
+  "actual_deck_targets": {
+    "source": "17Lands game_data deck_* columns",
+    "selection": "latest game row per draft_id by game_time, then match_number, game_number, build_index",
+    "draft_csv": "C:\\Users\\samth\\Downloads\\draft_data_public.SOS.PremierDraft.csv\\draft_data_public.SOS.PremierDraft.csv",
+    "game_csv": "C:\\Users\\samth\\Downloads\\game_data_public.SOS.PremierDraft.csv\\game_data_public.SOS.PremierDraft.csv",
+    "data_dir": "C:\\Users\\samth\\source\\repos\\MTG_Draft_Agent\\SL\\data\\cleaned_with_decks",
+    "card_index_source": "Same metadata card_names order used by X/y and the neural network.",
+    "deck_counts_key": "deck_counts",
+    "deck_spell_counts_key": "deck_spell_counts",
+    "has_deck_key": "has_deck",
+    "deck_spell_counts_meaning": "Actual main deck with generated basic lands zeroed out.",
+    "chunksize": 100000,
+    "min_match_wins": 5,
+    "complete_pool_size": 42,
+    "chunks_written": 46,
+    "build_count_distribution_per_draft": {
+      "1": 13926,
+      "2": 2273,
+      "3": 390,
+      "4": 61,
+      "5": 11,
+      "6": 1
+    },
+    "terminal_rows": 16671,
+    "rows_with_decks": 16660,
+    "missing_game_rows": 9,
+    "invalid_pool_rows": 2,
+    "invalid_examples": [
+      {
+        "draft_id": "cc35671d65ea49ae97ed1a40db605785",
+        "chunk": "draft_xy_chunk_0007.npz",
+        "row": 16001,
+        "bad_cards": [
+          "Bitter Triumph deck=1 pool=0"
+        ]
+      },
+      {
+        "draft_id": "0e9a9f6892cd46eda0e982ee3e6a2374",
+        "chunk": "draft_xy_chunk_0016.npz",
+        "row": 6677,
+        "bad_cards": [
+          "Forum of Amity deck=1 pool=0"
+        ]
+      }
+    ],
+    "deck_size_distribution": {
+      "40": 15564,
+      "41": 952,
+      "42": 64,
+      "43": 43,
+      "44": 11,
+      "45": 11,
+      "46": 6,
+      "47": 1,
+      "48": 1,
+      "49": 1,
+      "50": 2,
+      "51": 2,
+      "52": 1,
+      "53": 1
+    },
+    "drafted_card_count_distribution": {
+      "20": 1,
+      "22": 15,
+      "23": 1860,
+      "24": 4286,
+      "25": 4173,
+      "26": 2841,
+      "27": 1631,
+      "28": 1030,
+      "29": 487,
+      "30": 222,
+      "31": 69,
+      "32": 34,
+      "33": 8,
+      "34": 1,
+      "35": 2
+    },
+    "basic_land_count_distribution": {
+      "7": 2,
+      "8": 27,
+      "9": 57,
+      "10": 182,
+      "11": 452,
+      "12": 957,
+      "13": 1586,
+      "14": 2765,
+      "15": 4154,
+      "16": 4424,
+      "17": 2026,
+      "18": 23,
+      "19": 2,
+      "20": 3
+    },
+    "selected_build_index_distribution": {
+      "0": 13118,
+      "1": 2757,
+      "2": 620,
+      "3": 120,
+      "4": 31,
+      "5": 8,
+      "6": 4,
+      "9": 1,
+      "13": 1
     }
   }
 }
