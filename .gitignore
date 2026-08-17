@@ -4,7 +4,26 @@ __pycache__/
 .venv/
 .vscode/
 
-SL/data/raw/
-SL/data/cleaned/
-SL/data/cleaned_copy/
+# Large/generated data artifacts
+SL/data/
+MTG_Bot/data/
+*.npz
+*.npy
+*.parquet
+*.feather
+*.pkl
+*.pickle
+*.sqlite
+*.db
+*.gz
+*.zip
+*.7z
+*.bin
+
 SL/models/*.pt
+*.pt
+
+# Root-level downloaded data snapshots
+/SOS_cards.json
+/metadata.json
+/card-ratings-*.csv
