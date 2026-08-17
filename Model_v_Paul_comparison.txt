@@ -1,0 +1,31 @@
+Compared draft picker to Paul Cheon video:
+
+first pick: correct - 95% probability for card pick, paul agreed it was easily best pick
+second pick: correct - top 3 picks matched pauls top 3
+third pick: incorrect - paul picked our second pick (31%), did not consider the models top pick (46%)
+fourth pick: correct - strong 64% estimate, paul agreed that it was the safe pick
+fifth pick: correct - strong 80% estimate, paul agreed easily best picked
+sixth pick: correct - top 2 cards held 90% of probability, paul agreed those are only two options
+seventh pick: correct - strong 89%, paul immediately picked aswell
+
+skipped rest of pack because easy picks now
+
+first pick: correct - same card as last first pick, 95% again, second pick was also pauls second pick
+second pick: correct - model said 84% wander off, but paul said it was closer
+third pick: incorrect - super close second pick for model, remarkably this pick was a splash pick by paul, suprised model considered it so high
+fourth pick: incorrect - paul did not pick powerful mythic model wanted (79%), instead he pick models second pick safe common(20%). 
+fifth pick: incorrect - super close second pick for model, model wanted vamparic tutor, paul noted that vamparic tutor was a trap.
+sixth pick: correct - strong 90%, paul said solid
+seventh pick: incorrect - picked models second pick (17%), however was not close, models top pick was (69%), was a rare dual land not in our colors, while second pick was common dual land in our colors. Very bad pick from model.
+
+skipped rest of pack
+
+first pick: correct - 55%, premium common removal, even though multiple rares of our colors
+second pick: incorrect - picked models second (11%), but wasnt close to models top (74%)
+third pick: incorrect - models 5th pick, didnt even consider models top 2. Paul decided to splash, considering 3 cards, model did not seem to want to splash
+fourth pick: incorrect - Paul gem drafted here
+fifth pick: correct - really easy pick
+sixth pick: correct - top 2 matched pauls top 2
+seventh pick: incorrect - paul considered, but already had 3 copies of models top pick. Instead chose dual land that modeled placed at #3
+
+skipped rest of pack
