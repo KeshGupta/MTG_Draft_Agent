@@ -202,6 +202,34 @@
       ]
     },
     {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 101728,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {
+        "13": "Reach",
+        "88009": "This spell costs {o1} less to cast for each instant and sorcery card in your graveyard.",
+        "204291": "Whenever The Dawning Archaic attacks, you may cast target instant or sorcery card from your graveyard without paying its mana cost. If that spell would be put into your graveyard, exile it instead."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102460,
+      "image_url": "https://cards.scryfall.io/large/front/7/a/7a451985-37e1-44d8-839b-dc1e88df5c96.jpg?1775936921",
+      "layout": "standard",
+      "name": "The Dawning Archaic",
+      "rarity": "mythic",
+      "types": [
+        "Legendary Creature - Avatar"
+      ]
+    },
+    {
       "abilities": {
         "13": "Reach",
         "14": "Trample",
@@ -503,6 +531,24 @@
     },
     {
       "abilities": {
+        "15": "Vigilance",
+        "204309": "Repartee \u2014 Whenever you cast an instant or sorcery spell that targets a creature, create a 1/1 white and black Inkling creature token with flying."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "8": "Flying"
+      },
+      "id": 102479,
+      "image_url": "https://cards.scryfall.io/large/front/5/d/5defb2d1-d0fb-4e7f-a5c7-3df99fe675d6.jpg?1775937046",
+      "layout": "standard",
+      "name": "Informed Inkwright",
+      "rarity": "rare",
+      "types": [
+        "Creature - Human Wizard"
+      ]
+    },
+    {
+      "abilities": {
         "141939": "Ward {o2}",
         "204310": "Repartee \u2014 Whenever you cast an instant or sorcery spell that targets a creature, this creature gets +1/+0 and gains lifelink until end of turn."
       },
@@ -653,6 +699,24 @@
       "rarity": "common",
       "types": [
         "Creature - Djinn Bard"
+      ]
+    },
+    {
+      "abilities": {
+        "405": "Paradigm",
+        "204319": "Return target nonland permanent card from your graveyard to the battlefield."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "205572": "Paradigm"
+      },
+      "id": 102489,
+      "image_url": "https://cards.scryfall.io/large/front/9/e/9ebc4ecf-2fa2-4ab8-afde-3b91cf5eadb6.jpg?1775937123",
+      "layout": "standard",
+      "name": "Restoration Seminar",
+      "rarity": "mythic",
+      "types": [
+        "Sorcery - Lesson"
       ]
     },
     {
@@ -886,6 +950,40 @@
     },
     {
       "abilities": {
+        "8": "Flying",
+        "141939": "Ward {o2}",
+        "204300": "This creature enters prepared.",
+        "204331": "Whenever this creature attacks, you may exile eight cards from your graveyard. If you do, this creature becomes prepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102504,
+      "image_url": "https://cards.scryfall.io/large/front/7/5/75961d36-acf6-425f-9698-0bf52af74f31.jpg?1775937223",
+      "layout": "prepare",
+      "name": "Emeritus of Ideation",
+      "rarity": "mythic",
+      "types": [
+        "Creature - Human Wizard"
+      ]
+    },
+    {
+      "abilities": {
+        "8": "Flying",
+        "204332": "Whenever this creature attacks, it becomes prepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102505,
+      "image_url": "https://cards.scryfall.io/large/front/7/2/72654b84-9902-41db-92ab-a3499c31221c.jpg?1775937230",
+      "layout": "prepare",
+      "name": "Encouraging Aviator",
+      "rarity": "uncommon",
+      "types": [
+        "Creature - Bird Wizard"
+      ]
+    },
+    {
+      "abilities": {
         "24121": "Counter target creature spell."
       },
       "back_image_url": "",
@@ -1007,6 +1105,22 @@
     },
     {
       "abilities": {
+        "143924": "When Jadzi enters, draw two cards, then discard two cards.",
+        "204300": "Jadzi enters prepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102514,
+      "image_url": "https://cards.scryfall.io/large/front/a/9/a95b6baf-01e6-49c3-9a26-394b127d53c3.jpg?1775937293",
+      "layout": "prepare",
+      "name": "Jadzi, Steward of Fate",
+      "rarity": "rare",
+      "types": [
+        "Legendary Creature - Human Wizard"
+      ]
+    },
+    {
+      "abilities": {
         "204300": "This creature enters prepared."
       },
       "back_image_url": "",
@@ -1099,6 +1213,22 @@
       "rarity": "common",
       "types": [
         "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "2197": "When Orysa enters, draw two cards.",
+        "204347": "This spell costs {o3} less to cast if creatures you control have total toughness 10 or greater."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102521,
+      "image_url": "https://cards.scryfall.io/large/front/0/1/010ed379-63f5-452c-9cd4-00d51647c0e3.jpg?1775937343",
+      "layout": "standard",
+      "name": "Orysa, Tide Choreographer",
+      "rarity": "uncommon",
+      "types": [
+        "Legendary Creature - Merfolk Bard"
       ]
     },
     {
@@ -1231,6 +1361,22 @@
       "rarity": "common",
       "types": [
         "Creature - Frog Wizard"
+      ]
+    },
+    {
+      "abilities": {
+        "89260": "Exile Wisdom of Ages.",
+        "204353": "Return all instant and sorcery cards from your graveyard to your hand. You have no maximum hand size for the rest of the game."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102530,
+      "image_url": "https://cards.scryfall.io/large/front/b/2/b227ef04-33e4-44e8-a357-0ea3dfe5d49b.jpg?1775937405",
+      "layout": "standard",
+      "name": "Wisdom of Ages",
+      "rarity": "rare",
+      "types": [
+        "Sorcery"
       ]
     },
     {
@@ -1615,6 +1761,26 @@
     },
     {
       "abilities": {
+        "141792": "Surveil 2.",
+        "204376": "Any number of target players each discard a card.",
+        "204377": "Return target creature card with mana value 3 or less from your graveyard to the battlefield.",
+        "204378": "Flip five coins. Target opponent skips their next X turns, where X is the number of coins that came up heads."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "270": "Surveil 2."
+      },
+      "id": 102556,
+      "image_url": "https://cards.scryfall.io/large/front/8/f/8fbad757-4081-42f7-a460-68ac03e77510.jpg?1775937587",
+      "layout": "standard",
+      "name": "Ral Zarek, Guest Lecturer",
+      "rarity": "mythic",
+      "types": [
+        "Legendary Planeswalker - Ral"
+      ]
+    },
+    {
+      "abilities": {
         "204379": "At the beginning of your first main phase, this creature becomes prepared."
       },
       "back_image_url": "",
@@ -1626,6 +1792,23 @@
       "rarity": "uncommon",
       "types": [
         "Creature - Snake Warlock"
+      ]
+    },
+    {
+      "abilities": {
+        "8": "Flying",
+        "12": "Lifelink",
+        "204380": "At the beginning of your second main phase, if you gained 2 or more life this turn, this creature becomes prepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102558,
+      "image_url": "https://cards.scryfall.io/large/front/f/e/fe85a124-0d8b-4a29-8df1-65888a39147f.jpg?1775937600",
+      "layout": "prepare",
+      "name": "Scheming Silvertongue",
+      "rarity": "rare",
+      "types": [
+        "Creature - Vampire Warlock"
       ]
     },
     {
@@ -1744,6 +1927,21 @@
     },
     {
       "abilities": {
+        "204385": "Converge \u2014 Archaic's Agony deals X damage to target creature, where X is the number of colors of mana spent to cast this spell. Exile cards from the top of your library equal to the excess damage dealt to that creature this way. You may play those cards until the end of your next turn."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102566,
+      "image_url": "https://cards.scryfall.io/large/front/8/d/8d99f8b2-5c1c-4059-bf68-c6b2e9e5b275.jpg?1775937675",
+      "layout": "standard",
+      "name": "Archaic's Agony",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "204388": "Choose one \u2014 \n\u2022Artistic Process deals 6 damage to target creature. \n\u2022Artistic Process deals 2 damage to each creature you don't control. \n\u2022Create a 3/3 blue and red Elemental creature token with flying. It gains haste until end of turn."
       },
       "back_image_url": "",
@@ -1792,6 +1990,27 @@
       "rarity": "uncommon",
       "types": [
         "Creature - Spirit Knight"
+      ]
+    },
+    {
+      "abilities": {
+        "166569": "This spell can't be copied.",
+        "204392": "Choose one or both \u2014 \n\u2022Copy target instant or sorcery spell you control. You may choose new targets for the copy. \n\u2022Copy target creature spell you control. The copy gains haste and \"At the beginning of the end step, sacrifice this token.\""
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "9": "Haste",
+        "1335": "At the beginning of the end step, sacrifice this token.",
+        "204389": "Copy target instant or sorcery spell you control. You may choose new targets for the copy.",
+        "207608": "Copy target creature spell you control. The copy gains haste and \"At the beginning of the end step, sacrifice this token.\""
+      },
+      "id": 102570,
+      "image_url": "https://cards.scryfall.io/large/front/0/c/0cda4235-4dce-48fe-a8a5-2a952dedbe25.jpg?1775937707",
+      "layout": "standard",
+      "name": "Choreographed Sparks",
+      "rarity": "rare",
+      "types": [
+        "Instant"
       ]
     },
     {
@@ -2091,6 +2310,24 @@
     },
     {
       "abilities": {
+        "204410": "Choose one or both \u2014 \n\u2022Target player discards any number of cards, then draws that many cards. \n\u2022Steal the Show deals damage equal to the number of instant and sorcery cards in your graveyard to target creature or planeswalker."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "204408": "Target player discards any number of cards, then draws that many cards.",
+        "204409": "Steal the Show deals damage equal to the number of instant and sorcery cards in your graveyard to target creature or planeswalker."
+      },
+      "id": 102589,
+      "image_url": "https://cards.scryfall.io/large/front/7/a/7ac6649f-980e-4404-9c05-458c30578ecc.jpg?1775937875",
+      "layout": "standard",
+      "name": "Steal the Show",
+      "rarity": "rare",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "1577": "Ward\u2014Pay 2 life.",
         "204300": "This creature enters prepared."
       },
@@ -2302,6 +2539,24 @@
     },
     {
       "abilities": {
+        "204424": "Put two +1/+1 counters on target creature. \nInfusion \u2014 If you gained life this turn, that creature also gains trample and indestructible until end of turn."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "14": "Trample",
+        "104": "Indestructible"
+      },
+      "id": 102603,
+      "image_url": "https://cards.scryfall.io/large/front/7/9/79b9ace7-eceb-4f97-9ee7-d5ee3e0b3515.jpg?1775937979",
+      "layout": "standard",
+      "name": "Efflorescence",
+      "rarity": "common",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
         "15": "Vigilance",
         "204300": "This creature enters prepared.",
         "204425": "Whenever this creature attacks, if you control eight or more lands, this creature becomes prepared."
@@ -2367,6 +2622,22 @@
     },
     {
       "abilities": {
+        "13": "Reach",
+        "404": "Increment"
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102610,
+      "image_url": "https://cards.scryfall.io/large/front/0/3/030b1272-5990-4bc9-8fc1-82cc05602060.jpg?1775938030",
+      "layout": "standard",
+      "name": "Hungry Graffalon",
+      "rarity": "common",
+      "types": [
+        "Creature - Giraffe"
+      ]
+    },
+    {
+      "abilities": {
         "204300": "This creature enters prepared."
       },
       "back_image_url": "",
@@ -2378,6 +2649,22 @@
       "rarity": "uncommon",
       "types": [
         "Creature - Cat Cleric"
+      ]
+    },
+    {
+      "abilities": {
+        "19173": "Target creature gets +2/+4 until end of turn.",
+        "204430": "Infusion \u2014 When you cast this spell, copy it if you gained life this turn. You may choose new targets for the copy."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102612,
+      "image_url": "https://cards.scryfall.io/large/front/c/5/c5e7c856-8b71-44e6-8998-0b0b3ff0ef99.jpg?1775938045",
+      "layout": "standard",
+      "name": "Lumaret's Favor",
+      "rarity": "uncommon",
+      "types": [
+        "Instant"
       ]
     },
     {
@@ -2414,6 +2701,21 @@
     },
     {
       "abilities": {
+        "204431": "Target creature you control gets +1/+1 until end of turn. You draw a card and gain 1 life."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102615,
+      "image_url": "https://cards.scryfall.io/large/front/0/8/0863a19d-4511-4a78-98dd-d194afd1c39b.jpg?1775938067",
+      "layout": "standard",
+      "name": "Oracle's Restoration",
+      "rarity": "common",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "13": "Reach",
         "204433": "When this creature dies, create two 1/1 black and green Pest creature tokens with \"Whenever this token attacks, you gain 1 life.\""
       },
@@ -2428,6 +2730,21 @@
       "rarity": "uncommon",
       "types": [
         "Creature - Plant Sloth"
+      ]
+    },
+    {
+      "abilities": {
+        "204434": "Sacrifice two lands. Search your library for four basic land cards, put them onto the battlefield tapped, then shuffle."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102617,
+      "image_url": "https://cards.scryfall.io/large/front/c/8/c83b96a3-ddfd-4d11-8a85-5bf62087cbb9.jpg?1775938080",
+      "layout": "standard",
+      "name": "Planar Engineering",
+      "rarity": "rare",
+      "types": [
+        "Sorcery"
       ]
     },
     {
@@ -2594,6 +2911,21 @@
     },
     {
       "abilities": {
+        "204439": "Look at the top five cards of your library. You may reveal up to two creature and/or land cards from among them, then put the rest on the bottom of your library in a random order. Put all land cards revealed this way onto the battlefield tapped and put all creature cards revealed this way into your hand."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102628,
+      "image_url": "https://cards.scryfall.io/large/front/a/6/a6597852-4267-4ea6-a391-f927e4833be2.jpg?1775938156",
+      "layout": "standard",
+      "name": "Zimone's Experiment",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "8": "Flying",
         "204440": "Whenever you cast a creature spell, Abigale becomes prepared."
       },
@@ -2667,6 +2999,23 @@
       "rarity": "rare",
       "types": [
         "Legendary Creature - Djinn Sorcerer"
+      ]
+    },
+    {
+      "abilities": {
+        "404": "Increment",
+        "204446": "Whenever one or more +1/+1 counters are put on Berta, add one mana of any color.",
+        "204447": "{oX}, {oT}: Create a 0/0 green and blue Fractal creature token and put X +1/+1 counters on it."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102634,
+      "image_url": "https://cards.scryfall.io/large/front/7/5/75f89c36-c81d-4580-9a5c-218fed0c5c9a.jpg?1775938201",
+      "layout": "standard",
+      "name": "Berta, Wise Extrapolator",
+      "rarity": "rare",
+      "types": [
+        "Legendary Creature - Frog Druid"
       ]
     },
     {
@@ -3053,6 +3402,27 @@
     },
     {
       "abilities": {
+        "8": "Flying",
+        "9": "Haste",
+        "204474": "Each instant and sorcery card in your hand has miracle {o2}.",
+        "204475": "At the beginning of each opponent's upkeep, you may discard a card. If you do, draw a card."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "95": "Miracle",
+        "204556": "Miracle {o2}"
+      },
+      "id": 102660,
+      "image_url": "https://cards.scryfall.io/large/front/7/1/71a6701f-40f1-43ef-bff5-a5907fd67cd6.jpg?1775938396",
+      "layout": "standard",
+      "name": "Lorehold, the Historian",
+      "rarity": "mythic",
+      "types": [
+        "Legendary Creature - Elder Dragon"
+      ]
+    },
+    {
+      "abilities": {
         "204477": "Target player discards two cards. Put up to one land card discarded this way onto the battlefield tapped under your control."
       },
       "back_image_url": "",
@@ -3289,6 +3659,24 @@
       "rarity": "common",
       "types": [
         "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "204500": "Lands you control have \"{oT}: Add two mana of any one color. Spend this mana only to cast instant and sorcery spells.\"",
+        "204501": "{oT}: Draw a card. Activate only if you have seven or more cards in your hand."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "204499": "{oT}: Add two mana of any one color. Spend this mana only to cast instant and sorcery spells."
+      },
+      "id": 102680,
+      "image_url": "https://cards.scryfall.io/large/front/6/e/6ef168d6-28f2-4c24-9bfa-82c35663b729.jpg?1775938538",
+      "layout": "standard",
+      "name": "Resonating Lute",
+      "rarity": "rare",
+      "types": [
+        "Artifact"
       ]
     },
     {
@@ -3602,6 +3990,22 @@
     },
     {
       "abilities": {
+        "10179": "As an additional cost to cast this spell, pay X life.",
+        "204522": "Destroy all artifacts and creatures with mana value X or less."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102700,
+      "image_url": "https://cards.scryfall.io/large/front/6/f/6fa9cd18-3181-4373-ab65-49bf9de9487f.jpg?1775938681",
+      "layout": "standard",
+      "name": "Vicious Rivalry",
+      "rarity": "rare",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "204523": "Create two 3/3 blue and red Elemental creature tokens with flying.",
         "204524": "{o2}, Discard this card: Look at the top two cards of your library. Put one of them into your hand and the other into your graveyard."
       },
@@ -3655,6 +4059,27 @@
     },
     {
       "abilities": {
+        "1": "Deathtouch",
+        "8": "Flying",
+        "152692": "Affinity for creatures",
+        "204529": "Instant and sorcery spells you cast have affinity for creatures."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "42": "Affinity for",
+        "152692": "Affinity for creatures"
+      },
+      "id": 102704,
+      "image_url": "https://cards.scryfall.io/large/front/e/d/ed7b2361-97c6-49e2-bf0b-4770f4ffe2f0.jpg?1775938710",
+      "layout": "standard",
+      "name": "Witherbloom, the Balancer",
+      "rarity": "mythic",
+      "types": [
+        "Legendary Creature - Elder Dragon"
+      ]
+    },
+    {
+      "abilities": {
         "204530": "Once during each of your turns, you may cast an instant or sorcery spell from your hand without paying its mana cost."
       },
       "back_image_url": "",
@@ -3666,6 +4091,24 @@
       "rarity": "rare",
       "types": [
         "Legendary Creature - Human Bard Sorcerer"
+      ]
+    },
+    {
+      "abilities": {
+        "204533": "When this creature enters, choose up to one \u2014 \n\u2022Target creature becomes prepared. (Only creatures with prepare spells can become prepared.) \n\u2022Target creature becomes unprepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "204531": "Target creature becomes prepared. (Only creatures with prepare spells can become prepared.)",
+        "204532": "Target creature becomes unprepared."
+      },
+      "id": 102706,
+      "image_url": "https://cards.scryfall.io/large/front/b/f/bf2efdd9-d2b4-4bea-a5b9-dbb2eee4dfba.jpg?1775938724",
+      "layout": "standard",
+      "name": "Biblioplex Tomekeeper",
+      "rarity": "common",
+      "types": [
+        "Artifact Creature - Construct"
       ]
     },
     {
@@ -3909,6 +4352,22 @@
     },
     {
       "abilities": {
+        "4247": "{oT}: Add {oR} or {oW}.",
+        "145461": "This land enters tapped unless you control two or more other lands."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102723,
+      "image_url": "https://cards.scryfall.io/large/front/b/3/b34000e9-ff20-4fb4-9d0b-03a172a92457.jpg?1775938845",
+      "layout": "standard",
+      "name": "Sundown Pass",
+      "rarity": "rare",
+      "types": [
+        "Land"
+      ]
+    },
+    {
+      "abilities": {
         "88024": "{oT}, Sacrifice this land: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle."
       },
       "back_image_url": "",
@@ -4037,6 +4496,21 @@
       },
       "back_image_url": "",
       "hidden_abilities": {},
+      "id": 102737,
+      "image_url": "https://cards.scryfall.io/large/front/a/6/a642c7b1-d4d1-4125-a66d-560438e5ee51.jpg?1775938951",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
       "id": 102738,
       "image_url": "https://cards.scryfall.io/large/front/b/c/bce45bc0-accd-4853-a166-9dd5597526d5.jpg?1775938958",
       "layout": "standard",
@@ -4044,6 +4518,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102739,
+      "image_url": "https://cards.scryfall.io/large/front/f/1/f169dfb2-e4c8-46e9-8591-e51bb82da082.jpg?1775938964",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
       ]
     },
     {
@@ -4249,6 +4738,24 @@
     },
     {
       "abilities": {
+        "1275": "As an additional cost to cast this spell, sacrifice a creature.",
+        "188699": "Creatures you control gain indestructible until end of turn. Put a +1/+1 counter on each creature you control."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "104": "Indestructible"
+      },
+      "id": 102756,
+      "image_url": "https://cards.scryfall.io/large/front/6/f/6f8f8183-d17a-41b8-b3b5-914f193fd964.jpg?1775936379",
+      "layout": "standard",
+      "name": "Duty Beyond Death",
+      "rarity": "uncommon",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
         "169449": "Return target creature card with mana value 3 or less from your graveyard to the battlefield tapped."
       },
       "back_image_url": "",
@@ -4279,6 +4786,21 @@
     },
     {
       "abilities": {
+        "141618": "Converge \u2014 Exile target nonland permanent if its mana value is less than or equal to the number of colors of mana spent to cast this spell."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102759,
+      "image_url": "https://cards.scryfall.io/large/front/c/3/c30342a9-9d60-4440-90fc-8df47d558be7.jpg?1775936401",
+      "layout": "standard",
+      "name": "Prismatic Ending",
+      "rarity": "rare",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "173854": "Destroy target creature with power or toughness 4 or greater."
       },
       "back_image_url": "",
@@ -4290,6 +4812,24 @@
       "rarity": "uncommon",
       "types": [
         "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "137458": "Exile target creature you don't control. For each creature exiled this way, its controller searches their library for a basic land card. Those players put those cards onto the battlefield tapped, then shuffle.",
+        "137459": "Overload {o4oWoW}"
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "176698": "Exile each creature you don't control. Each player who controlled a creature exiled this way searches their library for a number of basic land cards equal to the number of creatures they controlled exiled this way, puts those cards onto the battlefield tapped, then shuffles."
+      },
+      "id": 102764,
+      "image_url": "https://cards.scryfall.io/large/front/d/d/ddf7fa6e-e38c-4f3d-8d8b-6ecbccdbb8f9.jpg?1775936442",
+      "layout": "standard",
+      "name": "Winds of Abandon",
+      "rarity": "mythic",
+      "types": [
+        "Sorcery"
       ]
     },
     {
@@ -4415,6 +4955,22 @@
     },
     {
       "abilities": {
+        "1333": "Cycling {oB}",
+        "24135": "Target creature gets -1/-1 until end of turn."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102783,
+      "image_url": "https://cards.scryfall.io/large/front/b/2/b221e1e9-7b14-4444-ac1c-3d5174c711e9.jpg?1775936590",
+      "layout": "standard",
+      "name": "Locust Spray",
+      "rarity": "uncommon",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
         "165849": "Choose one \u2014 \n\u2022Each opponent sacrifices a nontoken creature of their choice. \n\u2022Each opponent sacrifices a creature token of their choice. \n\u2022Each opponent sacrifices a planeswalker of their choice."
       },
       "back_image_url": "",
@@ -4430,6 +4986,21 @@
       "rarity": "rare",
       "types": [
         "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "173983": "Look at twice X cards from the top of your library. Put X cards from among them into your hand and the rest into your graveyard. You lose X life."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102786,
+      "image_url": "https://cards.scryfall.io/large/front/5/c/5c9caa7b-0268-4606-a71d-82dff16e6418.jpg?1775936611",
+      "layout": "standard",
+      "name": "Stargaze",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
       ]
     },
     {
@@ -4529,6 +5100,24 @@
       "image_url": "https://cards.scryfall.io/large/front/4/b/4b2e000b-a147-443b-9138-9ff2d16c0422.jpg?1775936696",
       "layout": "standard",
       "name": "Monstrous Rage",
+      "rarity": "uncommon",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "173725": "Spree \n+ {o1} \u2014 Copy target instant spell, sorcery spell, activated ability, or triggered ability. You may choose new targets for the copy. \n+ {o1} \u2014 Change the target of target spell or ability with a single target."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "171886": "+ {o1} \u2014 Copy target instant spell, sorcery spell, activated ability, or triggered ability. You may choose new targets for the copy.",
+        "171887": "+ {o1} \u2014 Change the target of target spell or ability with a single target."
+      },
+      "id": 102799,
+      "image_url": "https://cards.scryfall.io/large/front/e/9/e968efff-635b-4780-9bbe-099e75a1841b.jpg?1775936710",
+      "layout": "standard",
+      "name": "Return the Favor",
       "rarity": "uncommon",
       "types": [
         "Instant"
@@ -4699,6 +5288,36 @@
     },
     {
       "abilities": {
+        "90211": "When this creature enters, return target instant or sorcery card from your graveyard to your hand."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102826,
+      "image_url": "https://cards.scryfall.io/large/front/d/5/d583783f-623c-40dd-9dac-0937d65f9341.jpg?1775936849",
+      "layout": "standard",
+      "name": "Archaeomancer",
+      "rarity": "common",
+      "types": [
+        "Creature - Human Wizard"
+      ]
+    },
+    {
+      "abilities": {
+        "141913": "Magecraft \u2014 Whenever you cast or copy an instant or sorcery spell, draw a card."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102827,
+      "image_url": "https://cards.scryfall.io/large/front/2/a/2ab5ba3a-22a5-4d79-af99-fe1ef6cc8676.jpg?1775936856",
+      "layout": "standard",
+      "name": "Archmage Emeritus",
+      "rarity": "rare",
+      "types": [
+        "Creature - Human Wizard"
+      ]
+    },
+    {
+      "abilities": {
         "16617": "Morph {oB}",
         "21792": "Whenever another nontoken creature you control dies, draw a card."
       },
@@ -4708,6 +5327,22 @@
       "image_url": "https://cards.scryfall.io/large/front/2/c/2c12928e-ec68-40d4-8126-af5af4b49033.jpg?1775936871",
       "layout": "standard",
       "name": "Grim Haruspex",
+      "rarity": "rare",
+      "types": [
+        "Creature - Human Wizard"
+      ]
+    },
+    {
+      "abilities": {
+        "7": "Flash",
+        "101728": "When this creature enters, copy target instant or sorcery spell. You may choose new targets for the copy."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102830,
+      "image_url": "https://cards.scryfall.io/large/front/e/a/ea11f546-4f7c-4649-9e6e-65d0a3ef3912.jpg?1775936877",
+      "layout": "standard",
+      "name": "Dualcaster Mage",
       "rarity": "rare",
       "types": [
         "Creature - Human Wizard"
@@ -4808,6 +5443,36 @@
     },
     {
       "abilities": {
+        "2191": "Target player draws three cards."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 104063,
+      "image_url": "https://cards.scryfall.io/large/front/7/5/75961d36-acf6-425f-9698-0bf52af74f31.jpg?1775937223",
+      "layout": "prepare",
+      "name": "Ancestral Recall",
+      "rarity": "mythic",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "205473": "Create X 0/0 green and blue Fractal creature tokens, then put X +1/+1 counters on each Fractal you control."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 104066,
+      "image_url": "https://cards.scryfall.io/large/front/a/9/a95b6baf-01e6-49c3-9a26-394b127d53c3.jpg?1775937293",
+      "layout": "prepare",
+      "name": "Oracle's Gift",
+      "rarity": "rare",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "23607": "Draw two cards."
       },
       "back_image_url": "",
@@ -4892,6 +5557,21 @@
       "layout": "prepare",
       "name": "Demonic Tutor",
       "rarity": "mythic",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "205476": "Each opponent loses 2 life."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 104074,
+      "image_url": "https://cards.scryfall.io/large/front/c/7/c715fe4c-c0e7-4342-811f-b74687851097.jpg?1775937525",
+      "layout": "prepare",
+      "name": "Bloodletting",
+      "rarity": "uncommon",
       "types": [
         "Sorcery"
       ]
@@ -5131,6 +5811,21 @@
     },
     {
       "abilities": {
+        "205482": "You draw a card and gain 1 life."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 104091,
+      "image_url": "https://cards.scryfall.io/large/front/7/1/7120e71b-2976-451b-89a7-a1665dc6fb6b.jpg?1775938655",
+      "layout": "prepare",
+      "name": "Deep Sight",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
         "1152": "{oT}: Add {oC}.",
         "5707": "{oT}: Draw a card. Activate only if you have exactly seven cards in hand."
       },
@@ -5275,7 +5970,62 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 1333,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 137218,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 139213,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 141673,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 141792,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 141913,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -5320,6 +6070,17 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 143868,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 143924,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -5396,6 +6157,17 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 169749,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 171753,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -5451,7 +6223,40 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 175826,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 183,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 18472,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 18504,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -5485,6 +6290,17 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 203119,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204291,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -5562,6 +6378,17 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 204305,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204309,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -5682,6 +6509,50 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204331,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204333,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204339,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204340,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 204343,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -5770,6 +6641,17 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204366,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 204368,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -5804,6 +6686,17 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 204371,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204372,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -5891,6 +6784,28 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204404,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204405,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 204406,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -5914,6 +6829,17 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 204411,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204412,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -6012,6 +6938,17 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204430,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 204433,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -6045,6 +6982,17 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204441,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 204443,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -6068,6 +7016,28 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 204445,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204446,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204447,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -6232,6 +7202,17 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204475,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 204483,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -6266,6 +7247,17 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 204490,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204491,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -6342,6 +7334,17 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204518,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 204519,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -6354,6 +7357,17 @@
       "back_image_url": null,
       "hidden_abilities": {},
       "id": 204524,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204533,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
       "name": "Unknown",
@@ -6529,6 +7543,17 @@
       "abilities": {},
       "back_image_url": null,
       "hidden_abilities": {},
+      "id": 204556,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
       "id": 205572,
       "image_url": "/static/card_back.jpg",
       "layout": "standard",
@@ -6546,6 +7571,32 @@
       "name": "Unknown",
       "rarity": "basic",
       "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 2197,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 34720,
+      "image_url": "https://cards.scryfall.io/large/front/a/0/a095fed4-0a2a-4092-b923-8f46c8ea22d8.jpg?1562614935",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
     },
     {
       "abilities": {
@@ -6638,6 +7689,21 @@
     },
     {
       "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 58455,
+      "image_url": "https://cards.scryfall.io/large/front/7/2/722111d4-99f4-463b-b232-96821c18f189.jpg?1562788509",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
         "1002": "{oT}: Add {oU}."
       },
       "back_image_url": "",
@@ -6649,6 +7715,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 68206,
+      "image_url": "https://cards.scryfall.io/large/front/b/2/b2715553-ba9c-4753-9a1f-d13d8e2ed24f.jpg?1562303830",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
       ]
     },
     {
@@ -6672,6 +7753,66 @@
       },
       "back_image_url": "",
       "hidden_abilities": {},
+      "id": 69409,
+      "image_url": "https://cards.scryfall.io/large/front/1/9/197f5bd0-5ab3-4bf4-b20e-1389c0e9527a.jpg?1603678816",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 69411,
+      "image_url": "https://cards.scryfall.io/large/front/5/4/54a773e3-93f0-4bf8-ab6a-8cee939d743a.jpg?1603678825",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 6993,
+      "image_url": "https://cards.scryfall.io/large/front/a/0/a0ae7a81-9a61-4112-af22-369c525b2eb1.jpg?1576796596",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 70397,
+      "image_url": "https://cards.scryfall.io/large/front/7/d/7ded4b2a-ba56-43da-8ea7-392b77fc2926.jpg?1572491259",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
       "id": 70401,
       "image_url": "https://cards.scryfall.io/large/front/4/1/4134cd82-6e48-4fc0-bcb4-1e3af369ef82.jpg?1572491298",
       "layout": "standard",
@@ -6679,6 +7820,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 70408,
+      "image_url": "https://cards.scryfall.io/large/front/2/f/2f8705f4-c569-4d5f-bfd5-f076fbc78440.jpg?1572491345",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
       ]
     },
     {
@@ -6694,6 +7850,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 70416,
+      "image_url": "https://cards.scryfall.io/large/front/4/f/4fd257a5-439d-4ef8-9cc9-9741e99a04e3.jpg?1572491421",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
       ]
     },
     {
@@ -6788,6 +7959,51 @@
     },
     {
       "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 70763,
+      "image_url": "https://cards.scryfall.io/large/front/0/2/02cb5cfd-018e-4c5e-bef1-166262aa5f1d.jpg?1641306156",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 70765,
+      "image_url": "https://cards.scryfall.io/large/front/3/2/32af9f41-89e2-4e7a-9fec-fffe79cae077.jpg?1641306082",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
+        "24121": "Counter target creature spell."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 71116,
+      "image_url": "https://cards.scryfall.io/large/front/5/f/5f79c8a0-291e-4e13-b765-4cf8c726cf30.jpg?1636491405",
+      "layout": "standard",
+      "name": "Essence Scatter",
+      "rarity": "common",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
         "1005": "{oT}: Add {oG}."
       },
       "back_image_url": "",
@@ -6878,12 +8094,42 @@
     },
     {
       "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 7347,
+      "image_url": "https://cards.scryfall.io/large/front/2/c/2c4be2d6-d168-4e67-8d75-a04f637b56dd.jpg?1576796582",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
         "1001": "{oT}: Add {oW}."
       },
       "back_image_url": "",
       "hidden_abilities": {},
       "id": 73484,
       "image_url": "https://cards.scryfall.io/large/front/9/5/9591fd15-78d9-4089-a075-031ab2affd2d.jpg?1681845977",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 73485,
+      "image_url": "https://cards.scryfall.io/large/front/5/6/5665190e-ea2a-498e-9c4f-f0bc514bd80c.jpg?1681845982",
       "layout": "standard",
       "name": "Plains",
       "rarity": "basic",
@@ -6953,6 +8199,51 @@
     },
     {
       "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 73492,
+      "image_url": "https://cards.scryfall.io/large/front/4/1/418335b2-398f-499e-92ad-8d21a5a5b69f.jpg?1681763484",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 73493,
+      "image_url": "https://cards.scryfall.io/large/front/9/6/96297bcc-8480-4b14-8612-1c395d481bce.jpg?1681845960",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 73494,
+      "image_url": "https://cards.scryfall.io/large/front/7/0/701aefd4-074a-47b8-88a3-32fb90b09dee.jpg?1681845965",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
         "1005": "{oT}: Add {oG}."
       },
       "back_image_url": "",
@@ -6979,6 +8270,54 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 73512,
+      "image_url": "https://cards.scryfall.io/large/front/5/8/589a324f-4466-4d4a-8cfb-806a041d7c1f.jpg?1604203046",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "103801": "Choose one \u2014 \n\u2022Abrade deals 3 damage to target creature. \n\u2022Destroy target artifact."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "22564": "Destroy target artifact.",
+        "88831": "Abrade deals 3 damage to target creature."
+      },
+      "id": 73914,
+      "image_url": "https://cards.scryfall.io/large/front/6/e/6ef4ac5a-71bd-4b75-a949-084160ef7b7a.jpg?1597250002",
+      "layout": "standard",
+      "name": "Abrade",
+      "rarity": "uncommon",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 74132,
+      "image_url": "https://cards.scryfall.io/large/front/9/b/9bdd8409-7309-4239-a0f0-39755506610a.jpg?1597375698",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
       ]
     },
     {
@@ -7043,6 +8382,21 @@
     },
     {
       "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 75023,
+      "image_url": "https://cards.scryfall.io/large/front/f/1/f108b0fb-420a-422d-ae85-9a99c0f73169.jpg?1665800239",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
         "1004": "{oT}: Add {oR}."
       },
       "back_image_url": "",
@@ -7054,6 +8408,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 75025,
+      "image_url": "https://cards.scryfall.io/large/front/f/8/f8772631-d4a1-440d-ac89-ac6659bdc073.jpg?1665800214",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
       ]
     },
     {
@@ -7084,6 +8453,51 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 75555,
+      "image_url": "https://cards.scryfall.io/large/front/3/3/330e5230-7c5a-4720-b582-1087e5aa0cf8.jpg?1597375432",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 75899,
+      "image_url": "https://cards.scryfall.io/large/front/c/6/c6d4a44c-1948-4af5-83d6-99c7a540dc9c.jpg?1605220724",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 76383,
+      "image_url": "https://cards.scryfall.io/large/front/3/2/32ebf9dd-2f3d-440c-9935-bb3903ca7452.jpg?1642161389",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
       ]
     },
     {
@@ -7161,6 +8575,51 @@
     },
     {
       "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 76841,
+      "image_url": "https://cards.scryfall.io/large/front/6/c/6c285954-d6e9-4776-a441-b21441755cf0.jpg?1605220149",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 76852,
+      "image_url": "https://cards.scryfall.io/large/front/0/5/05df4124-9d1d-4d98-98d3-4dc72fcc982c.jpg?1605220511",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 77473,
+      "image_url": "https://cards.scryfall.io/large/front/e/1/e10e313f-ba75-4324-b1ac-f2bbae99f7ab.jpg?1627710867",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
         "1002": "{oT}: Add {oU}."
       },
       "back_image_url": "",
@@ -7206,6 +8665,22 @@
     },
     {
       "abilities": {
+        "18472": "{oT}: Add {oW} or {oB}.",
+        "145461": "This land enters tapped unless you control two or more other lands."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 79088,
+      "image_url": "https://cards.scryfall.io/large/front/a/d/ad44c9aa-eb8f-4200-8dfe-2af728d80083.jpg?1655879804",
+      "layout": "standard",
+      "name": "Shattered Sanctum",
+      "rarity": "rare",
+      "types": [
+        "Land"
+      ]
+    },
+    {
+      "abilities": {
         "1003": "{oT}: Add {oB}."
       },
       "back_image_url": "",
@@ -7221,6 +8696,36 @@
     },
     {
       "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 79728,
+      "image_url": "https://cards.scryfall.io/large/front/f/d/fdfebc79-5d84-4ce5-8bff-d09fe333f4a3.jpg?1654569141",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 79730,
+      "image_url": "https://cards.scryfall.io/large/front/4/b/4b8489c0-b01c-466e-b33b-239406d7ea69.jpg?1654569164",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
         "1001": "{oT}: Add {oW}."
       },
       "back_image_url": "",
@@ -7232,6 +8737,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 79737,
+      "image_url": "https://cards.scryfall.io/large/front/c/5/c50b3d79-2361-4858-98b0-64d83c4f7f70.jpg?1655495412",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
       ]
     },
     {
@@ -7322,6 +8842,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 81182,
+      "image_url": "https://cards.scryfall.io/large/front/9/e/9e1170a5-e5bb-4b86-8718-f75eec679b4e.jpg?1673916471",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
       ]
     },
     {
@@ -7446,6 +8981,51 @@
     },
     {
       "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 82394,
+      "image_url": "https://cards.scryfall.io/large/front/e/8/e8e9959a-b422-4906-8d35-8b05c5dd6de1.jpg?1674073884",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 83679,
+      "image_url": "https://cards.scryfall.io/large/front/4/6/46a6375e-9477-4871-8a15-02439f3f6f34.jpg?1673916425",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "88024": "{oT}, Sacrifice this land: Search your library for a basic land card, put it onto the battlefield tapped, then shuffle."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 83961,
+      "image_url": "https://cards.scryfall.io/large/front/5/a/5adceb34-78c7-40dd-af31-6fb282d577ca.jpg?1675957283",
+      "layout": "standard",
+      "name": "Terramorphic Expanse",
+      "rarity": "common",
+      "types": [
+        "Land"
+      ]
+    },
+    {
+      "abilities": {
         "1001": "{oT}: Add {oW}."
       },
       "back_image_url": "",
@@ -7551,6 +9131,81 @@
     },
     {
       "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 85584,
+      "image_url": "https://cards.scryfall.io/large/front/9/1/912e30e7-9b8b-4c27-af3a-ffdcfe8b6feb.jpg?1670376289",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 85585,
+      "image_url": "https://cards.scryfall.io/large/front/9/6/96cb4d9d-4f2b-4f60-b48f-749747aa7c15.jpg?1670376464",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 85586,
+      "image_url": "https://cards.scryfall.io/large/front/f/3/f32a6e87-a9fb-4bd8-a09d-b160aa302a2b.jpg?1682897851",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 85587,
+      "image_url": "https://cards.scryfall.io/large/front/8/2/82b5f331-3d6f-4e0f-b5a4-61040ed61d39.jpg?1682897839",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 85588,
+      "image_url": "https://cards.scryfall.io/large/front/1/a/1a13a86b-c4c5-4a7a-9e01-8669e9ed6557.jpg?1682897824",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
         "1449": "Look at the top two cards of your library. Put one of them into your hand and the other on the bottom of your library."
       },
       "back_image_url": "",
@@ -7597,6 +9252,81 @@
       "rarity": "uncommon",
       "types": [
         "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 87012,
+      "image_url": "https://cards.scryfall.io/large/front/6/2/6245d2f8-8ef0-4d2a-9abb-99839dc3abf0.jpg?1692940102",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 87014,
+      "image_url": "https://cards.scryfall.io/large/front/d/0/d0a801ba-ebf7-4b9e-98c2-db50448845b7.jpg?1692940121",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 87019,
+      "image_url": "https://cards.scryfall.io/large/front/1/b/1bd51a22-3e0d-4826-aab7-0adbfce4478a.jpg?1692940170",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 87020,
+      "image_url": "https://cards.scryfall.io/large/front/c/9/c9cd4d57-8c51-4fcf-8a9f-5d6a61c33e3d.jpg?1693867145",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 87023,
+      "image_url": "https://cards.scryfall.io/large/front/8/8/8822db23-34dc-452a-92bc-a3ceee4db375.jpg?1704711634",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
       ]
     },
     {
@@ -7667,6 +9397,36 @@
       "rarity": "token",
       "types": [
         "Enchantment - Aura Role"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 87660,
+      "image_url": "https://cards.scryfall.io/large/front/d/7/d7147b73-a7fa-4ecf-b9a1-a3f4851a5bef.jpg?1693254510",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "rare",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 87662,
+      "image_url": "https://cards.scryfall.io/large/front/3/8/387ec72f-dd6b-4769-be3a-981d580715be.jpg?1693254486",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "rare",
+      "types": [
+        "Basic Land - Swamp"
       ]
     },
     {
@@ -7809,6 +9569,36 @@
       },
       "back_image_url": "",
       "hidden_abilities": {},
+      "id": 90621,
+      "image_url": "https://cards.scryfall.io/large/front/0/a/0a7dbfd2-cda7-4fc9-9677-e442fb5f5f6f.jpg?1712356404",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1005": "{oT}: Add {oG}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 90622,
+      "image_url": "https://cards.scryfall.io/large/front/b/a/baf8a774-65f3-431e-b084-328ff1000895.jpg?1712356407",
+      "layout": "standard",
+      "name": "Forest",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Forest"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
       "id": 90629,
       "image_url": "https://cards.scryfall.io/large/front/9/1/9137b4aa-2289-4a4d-b1f5-ae75a0928278.jpg?1712356436",
       "layout": "standard",
@@ -7816,6 +9606,66 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 90791,
+      "image_url": "https://cards.scryfall.io/large/front/6/4/64daf0ac-678b-4683-9351-a6daf9c9f849.jpg?1717013916",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 90792,
+      "image_url": "https://cards.scryfall.io/large/front/d/4/d4f54250-74a9-4f77-bf60-bf13585c1a1b.jpg?1717013922",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 90795,
+      "image_url": "https://cards.scryfall.io/large/front/1/8/186e36d5-3f1d-4423-a8db-f4c38898fa30.jpg?1717014004",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 91293,
+      "image_url": "https://cards.scryfall.io/large/front/a/5/a5b0a88d-7049-4206-8085-4a68ab0bfd81.jpg?1708743486",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
       ]
     },
     {
@@ -7880,6 +9730,21 @@
     },
     {
       "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 92385,
+      "image_url": "https://cards.scryfall.io/large/front/8/c/8c8841b2-9b4e-4f65-8e30-1e9423cb8fbc.jpg?1726286901",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
         "90693": "When this creature enters, add {oBoBoB}."
       },
       "back_image_url": "",
@@ -7925,6 +9790,54 @@
     },
     {
       "abilities": {
+        "103801": "Choose one \u2014 \n\u2022Abrade deals 3 damage to target creature. \n\u2022Destroy target artifact."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "22564": "Destroy target artifact.",
+        "88831": "Abrade deals 3 damage to target creature."
+      },
+      "id": 93901,
+      "image_url": "https://cards.scryfall.io/large/front/5/4/548947dc-a5ca-43b5-9531-bcef20fa4ae5.jpg?1730489293",
+      "layout": "standard",
+      "name": "Abrade",
+      "rarity": "uncommon",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "1003": "{oT}: Add {oB}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95081,
+      "image_url": "https://cards.scryfall.io/large/front/7/3/73e124b6-3af7-41c0-b829-ff85aa0c3782.jpg?1738357043",
+      "layout": "standard",
+      "name": "Swamp",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95191,
+      "image_url": "https://cards.scryfall.io/large/front/4/e/4ef17ed4-a9b5-4b8e-b4cb-2ecb7e5898c3.jpg?1730489617",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
         "1001": "{oT}: Add {oW}."
       },
       "back_image_url": "",
@@ -7936,6 +9849,36 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95194,
+      "image_url": "https://cards.scryfall.io/large/front/2/3/23635e40-d040-40b7-8b98-90ed362aa028.jpg?1730489626",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95198,
+      "image_url": "https://cards.scryfall.io/large/front/1/e/1edc5050-69bd-416d-b04c-7f82de2a1901.jpg?1730489639",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
       ]
     },
     {
@@ -8000,6 +9943,21 @@
     },
     {
       "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95815,
+      "image_url": "https://cards.scryfall.io/large/front/3/e/3e8c67e5-587a-43b2-af47-bbad1f8b52e9.jpg?1743205132",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
         "1002": "{oT}: Add {oU}."
       },
       "back_image_url": "",
@@ -8026,6 +9984,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Swamp"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95818,
+      "image_url": "https://cards.scryfall.io/large/front/a/4/a4db1b7a-93f2-40a5-b649-80a099ddeb62.jpg?1743205146",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
       ]
     },
     {
@@ -8206,6 +10179,21 @@
       "rarity": "basic",
       "types": [
         "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 97169,
+      "image_url": "https://cards.scryfall.io/large/front/7/6/76313c69-8ec7-49e3-a34e-ade26097284c.jpg?1752947625",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
       ]
     },
     {

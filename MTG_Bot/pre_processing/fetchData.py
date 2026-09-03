@@ -135,6 +135,20 @@ def get_json(endpoint: str, params: dict[str, Any]) -> Any:
 
             response.raise_for_status()
             return response.json()
+        except requests.HTTPError as error:
+            last_error = error
+            error_response = error.response or response
+            if error_response is not None and not should_retry_response(error_response):
+                raise
+            if attempt > max_retries:
+                raise
+
+            delay = retry_delay(error_response, attempt)
+            print(
+                f"HTTP error for {endpoint}: {error}; retrying in {delay:.1f}s ({attempt}/{max_retries})",
+                flush=True,
+            )
+            time.sleep(delay)
         except requests.RequestException as error:
             last_error = error
             if attempt > max_retries:
@@ -151,7 +165,6 @@ def get_json(endpoint: str, params: dict[str, Any]) -> Any:
     if last_error is not None:
         raise last_error
     raise RuntimeError(f"Unable to fetch {endpoint}")
-
 
 
 def get_history_info(draft_id: str, match_index: int, game_index: int = 0) -> dict[str, Any]:
@@ -651,6 +664,20 @@ def read_draft_id_file(path: Path) -> list[str]:
     return draft_ids
 
 
+def nonnegative_float(value: str) -> float:
+    parsed = float(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be >= 0")
+    return parsed
+
+
+def nonnegative_int(value: str) -> int:
+    parsed = int(value)
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be >= 0")
+    return parsed
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Fetch 17Lands replay data into aligned JSONL files and one universal cards.json."
@@ -706,31 +733,31 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--request-delay",
-        type=float,
+        type=nonnegative_float,
         default=DEFAULT_REQUEST_DELAY_SECONDS,
         help="Minimum seconds to wait between 17Lands requests.",
     )
     parser.add_argument(
         "--request-timeout",
-        type=float,
+        type=nonnegative_float,
         default=DEFAULT_REQUEST_TIMEOUT_SECONDS,
         help="Seconds to wait before an individual 17Lands request times out.",
     )
     parser.add_argument(
         "--max-retries",
-        type=int,
+        type=nonnegative_int,
         default=DEFAULT_MAX_RETRIES,
         help="Retries for 403, 429, 5xx, and temporary request failures.",
     )
     parser.add_argument(
         "--backoff",
-        type=float,
+        type=nonnegative_float,
         default=DEFAULT_BACKOFF_SECONDS,
         help="Initial exponential backoff delay in seconds.",
     )
     parser.add_argument(
         "--max-backoff",
-        type=float,
+        type=nonnegative_float,
         default=DEFAULT_MAX_BACKOFF_SECONDS,
         help="Maximum retry backoff delay in seconds.",
     )
