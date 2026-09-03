@@ -3,7 +3,7 @@ from torch import nn
 
 
 class DraftScorer(nn.Module):
-    """Fast phase-aware scorer for drafting and end-of-draft deck construction."""
+    """Fast multi-output baseline using the one-hot/count draft state directly."""
 
     def __init__(
         self,
@@ -13,32 +13,16 @@ class DraftScorer(nn.Module):
         dropout=0.15,
         max_packs=3,
         max_picks=14,
-        max_build_steps=45,
-        max_pool_size=45,
-        max_pack_size=15,
-        target_deck_size=40,
-        basic_land_indices=None,
         **_,
     ):
         super().__init__()
         self.num_cards = num_cards
         self.max_packs = max_packs
         self.max_picks = max_picks
-        self.max_build_steps = max_build_steps
-        self.max_pool_size = max_pool_size
-        self.max_pack_size = max_pack_size
-        self.target_deck_size = target_deck_size
-        basic_land_mask = torch.zeros(num_cards, dtype=torch.bool)
-        if basic_land_indices is not None:
-            for index in basic_land_indices:
-                index = int(index)
-                if 0 <= index < num_cards:
-                    basic_land_mask[index] = True
-        self.register_buffer("basic_land_mask", basic_land_mask, persistent=False)
 
         self.net = nn.Sequential(
-            nn.LayerNorm(num_cards * 3 + 7),
-            nn.Linear(num_cards * 3 + 7, hidden_dim),
+            nn.LayerNorm(num_cards * 2 + 4),
+            nn.Linear(num_cards * 2 + 4, hidden_dim),
             nn.GELU(),
             nn.Dropout(dropout),
             nn.Linear(hidden_dim, hidden_dim),
@@ -47,24 +31,10 @@ class DraftScorer(nn.Module):
             nn.Linear(hidden_dim, num_cards),
         )
 
-    def forward(
-        self,
-        pool_counts,
-        pack_counts,
-        pack_numbers=None,
-        pick_numbers=None,
-        deck_counts=None,
-        phases=None,
-        build_steps=None,
-        legal_mask=None,
-        basic_land_mask=None,
-    ):
+    def forward(self, pool_counts, pack_counts, pack_numbers=None, pick_numbers=None):
         pool_counts = pool_counts.float()
         pack_counts = pack_counts.float()
-        if deck_counts is None:
-            deck_counts = torch.zeros_like(pool_counts)
-        else:
-            deck_counts = deck_counts.float()
+        pack_mask = pack_counts > 0
 
         batch_size = pool_counts.shape[0]
         device = pool_counts.device
@@ -72,46 +42,19 @@ class DraftScorer(nn.Module):
             pack_numbers = torch.zeros(batch_size, device=device)
         if pick_numbers is None:
             pick_numbers = torch.zeros(batch_size, device=device)
-        if phases is None:
-            phases = torch.zeros(batch_size, device=device)
-        if build_steps is None:
-            build_steps = torch.zeros(batch_size, device=device)
-
-        pack_numbers = pack_numbers.float().view(batch_size)
-        pick_numbers = pick_numbers.float().view(batch_size)
-        phases = phases.float().view(batch_size)
-        build_steps = build_steps.float().view(batch_size)
 
         stage = torch.stack(
             [
-                phases,
-                pack_numbers / max(self.max_packs - 1, 1),
-                pick_numbers / max(self.max_picks - 1, 1),
-                build_steps / max(self.max_build_steps, 1),
-                pool_counts.sum(1) / max(self.max_pool_size, 1),
-                pack_counts.sum(1) / max(self.max_pack_size, 1),
-                deck_counts.sum(1) / max(self.target_deck_size, 1),
+                pack_numbers.float() / max(self.max_packs - 1, 1),
+                pick_numbers.float() / max(self.max_picks - 1, 1),
+                pool_counts.sum(1) / 42.0,
+                pack_counts.sum(1) / 14.0,
             ],
             dim=1,
         )
 
-        logits = self.net(torch.cat([pool_counts, pack_counts, deck_counts, stage], dim=1))
-
-        if legal_mask is None:
-            draft_mask = pack_counts > 0
-            build_mask = pool_counts > deck_counts
-            if basic_land_mask is None:
-                basic_land_mask = self.basic_land_mask
-            else:
-                basic_land_mask = torch.as_tensor(basic_land_mask, dtype=torch.bool, device=device)
-            if basic_land_mask.ndim == 1:
-                basic_land_mask = basic_land_mask.view(1, -1)
-            build_mask = build_mask | basic_land_mask
-            legal_mask = torch.where(phases[:, None] > 0.5, build_mask, draft_mask)
-        else:
-            legal_mask = legal_mask.bool()
-
-        return logits.masked_fill(~legal_mask, -1e9)
+        logits = self.net(torch.cat([pool_counts, pack_counts, stage], dim=1))
+        return logits.masked_fill(~pack_mask, -1e9)
 
 
 class _ResidualBlock(nn.Module):
@@ -238,7 +181,7 @@ class ContextualDraftScorer(nn.Module):
         context = torch.cat([pool_sum, pool_avg, pack_avg, stage_vec, scalars], dim=1)
         query = self.query(self.context_mlp(context))
         keys = self.card_key(card_vecs)
-        logits = (query @ keys.T) * (self.emb_dim ** -0.5) 
+        logits = (query @ keys.T) * (self.emb_dim ** -0.5)
 
         stage_index = pack_numbers * self.max_picks + pick_numbers
         logits = logits + self.card_bias + self.stage_card_bias(stage_index)

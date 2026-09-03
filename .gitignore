@@ -6,7 +6,10 @@ __pycache__/
 
 # Large/generated data artifacts
 SL/data/
-MTG_Bot/data/
+MTG_Bot/data/*
+!MTG_Bot/data/replay.py
+!MTG_Bot/data/cards.csv
+!MTG_Bot/data/abilities.csv
 *.npz
 *.npy
 *.parquet

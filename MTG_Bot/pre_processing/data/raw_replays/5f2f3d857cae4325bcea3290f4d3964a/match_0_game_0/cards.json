@@ -1,0 +1,572 @@
+{
+  "cards": [
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 5,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {
+        "169446": "Destroy target creature, enchantment, or planeswalker. Its controller creates two Map tokens."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 90211,
+      "image_url": "https://cards.scryfall.io/large/front/7/d/7d60e0bc-1ce1-4b91-9952-16b394b5a348.jpg?1699044877",
+      "layout": "standard",
+      "name": "Get Lost",
+      "rarity": "rare",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95810,
+      "image_url": "https://cards.scryfall.io/large/front/0/d/0d0f1dd6-9564-4adc-af7d-f83252e8581a.jpg?1743205074",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "1002": "{oT}: Add {oU}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95811,
+      "image_url": "https://cards.scryfall.io/large/front/4/2/4208e66c-8c98-4c48-ab07-8523c0b26ca4.jpg?1743205078",
+      "layout": "standard",
+      "name": "Island",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Island"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 95813,
+      "image_url": "https://cards.scryfall.io/large/front/f/e/fe0865ba-47c0-40bc-b0c6-e1ea5ae08a98.jpg?1743205085",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "1004": "{oT}: Add {oR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 100651,
+      "image_url": "https://cards.scryfall.io/large/front/0/2/021fa322-f38c-4d94-8122-5b13425106d9.jpg?1771345172",
+      "layout": "standard",
+      "name": "Mountain",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Mountain"
+      ]
+    },
+    {
+      "abilities": {
+        "13157": "Flashback {oW}",
+        "145169": "Put a +1/+1 counter on target creature you control. It gains vigilance until end of turn."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "15": "Vigilance",
+        "35": "Flashback"
+      },
+      "id": 102469,
+      "image_url": "https://cards.scryfall.io/large/front/e/5/e52464ee-df8b-41ec-af93-4b0eb004383e.jpg?1775936980",
+      "layout": "standard",
+      "name": "Dig Site Inventory",
+      "rarity": "common",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "204302": "When Ennis enters, exile up to one other target creature you control. Return that card to the battlefield under its owner's control at the beginning of the next end step.",
+        "204303": "At the beginning of your end step, if one or more cards were put into exile this turn, put a +1/+1 counter on Ennis."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "204550": "When Ennis enters, exile up to one other target creature you control. Return that card to the battlefield under its owner's control at the beginning of the next end step."
+      },
+      "id": 102473,
+      "image_url": "https://cards.scryfall.io/large/front/d/2/d2ef31b4-24fa-4443-9f05-c8e99c3522e5.jpg?1775937005",
+      "layout": "standard",
+      "name": "Ennis, Debate Moderator",
+      "rarity": "uncommon",
+      "types": [
+        "Legendary Creature - Human Cleric"
+      ]
+    },
+    {
+      "abilities": {
+        "204305": "Repartee \u2014 Whenever you cast an instant or sorcery spell that targets a creature, put a +1/+1 counter on target creature you control."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102475,
+      "image_url": "https://cards.scryfall.io/large/front/d/b/db1cea01-123e-4b23-8b98-f94cabce3912.jpg?1775937020",
+      "layout": "standard",
+      "name": "Graduation Day",
+      "rarity": "uncommon",
+      "types": [
+        "Enchantment"
+      ]
+    },
+    {
+      "abilities": {
+        "204306": "Create a 2/2 red and white Spirit creature token.",
+        "204307": "Flashback\u2014Tap three untapped creatures you control."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "35": "Flashback"
+      },
+      "id": 102476,
+      "image_url": "https://cards.scryfall.io/large/front/e/8/e8abc1eb-6225-4b18-8502-b5324b818aed.jpg?1775937026",
+      "layout": "standard",
+      "name": "Group Project",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "3": "Double strike",
+        "204300": "This creature enters prepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102486,
+      "image_url": "https://cards.scryfall.io/large/front/6/2/62a47835-5719-48c4-a740-a0c5f00dce11.jpg?1775937102",
+      "layout": "prepare",
+      "name": "Quill-Blade Laureate",
+      "rarity": "uncommon",
+      "types": [
+        "Creature - Human Cleric"
+      ]
+    },
+    {
+      "abilities": {
+        "204325": "{oW}, Exile this card from your graveyard: You gain 2 life. Surveil 1. Activate only as a sorcery."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "269": "Surveil 1."
+      },
+      "id": 102495,
+      "image_url": "https://cards.scryfall.io/large/front/c/2/c2abfffb-bf36-44af-9a27-6e109e4d77dd.jpg?1775937164",
+      "layout": "standard",
+      "name": "Stone Docent",
+      "rarity": "common",
+      "types": [
+        "Creature - Spirit Chimera"
+      ]
+    },
+    {
+      "abilities": {
+        "61160": "Target creature you control gets +0/+3 and gains hexproof until end of turn."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "10": "Hexproof"
+      },
+      "id": 102500,
+      "image_url": "https://cards.scryfall.io/large/front/0/6/06f9f257-c7ef-44b7-8b2b-f038fba900af.jpg?1775937195",
+      "layout": "standard",
+      "name": "Chase Inspiration",
+      "rarity": "common",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "204300": "This creature enters prepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102568,
+      "image_url": "https://cards.scryfall.io/large/front/3/b/3ba971e7-0b7a-4750-896f-7cf063e66b2a.jpg?1775937691",
+      "layout": "prepare",
+      "name": "Blazing Firesinger",
+      "rarity": "uncommon",
+      "types": [
+        "Creature - Dwarf Bard"
+      ]
+    },
+    {
+      "abilities": {
+        "204300": "This creature enters prepared."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102576,
+      "image_url": "https://cards.scryfall.io/large/front/c/8/c85c5f06-dd31-4e2c-97be-2f64d65069ea.jpg?1775937759",
+      "layout": "prepare",
+      "name": "Goblin Glasswright",
+      "rarity": "common",
+      "types": [
+        "Creature - Goblin Sorcerer"
+      ]
+    },
+    {
+      "abilities": {
+        "204399": "Heated Argument deals 6 damage to target creature. You may exile a card from your graveyard. If you do, Heated Argument also deals 2 damage to that creature's controller."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102577,
+      "image_url": "https://cards.scryfall.io/large/front/0/0/0038d212-3d95-4f98-8c2e-7b2404d0ced7.jpg?1775937767",
+      "layout": "standard",
+      "name": "Heated Argument",
+      "rarity": "common",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {
+        "204400": "Damage can't be prevented this turn. Impractical Joke deals 3 damage to up to one target creature or planeswalker."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102578,
+      "image_url": "https://cards.scryfall.io/large/front/3/9/39a816b4-39b8-421c-b828-68db901d34b7.jpg?1775937777",
+      "layout": "standard",
+      "name": "Impractical Joke",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "14": "Trample",
+        "204413": "Opus \u2014 Whenever you cast an instant or sorcery spell, put a +1/+1 counter on this creature. If five or more mana was spent to cast that spell, put two +1/+1 counters on this creature instead."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102592,
+      "image_url": "https://cards.scryfall.io/large/front/b/8/b87e2474-98c1-4c1a-91ed-340b72d31653.jpg?1775937898",
+      "layout": "standard",
+      "name": "Tackle Artist",
+      "rarity": "common",
+      "types": [
+        "Creature - Orc Sorcerer"
+      ]
+    },
+    {
+      "abilities": {
+        "2245": "Flashback {o4oR}",
+        "86613": "Tome Blast deals 2 damage to any target."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "35": "Flashback"
+      },
+      "id": 102594,
+      "image_url": "https://cards.scryfall.io/large/front/7/2/72a3b17d-1e00-48e9-8402-c81bacd595a7.jpg?1775937914",
+      "layout": "standard",
+      "name": "Tome Blast",
+      "rarity": "common",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "90211": "When this creature enters, return target instant or sorcery card from your graveyard to your hand."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102596,
+      "image_url": "https://cards.scryfall.io/large/front/3/6/36ab2130-9f21-4d30-873a-aa72d3d15fa8.jpg?1775937928",
+      "layout": "standard",
+      "name": "Zealous Lorecaster",
+      "rarity": "common",
+      "types": [
+        "Creature - Giant Sorcerer"
+      ]
+    },
+    {
+      "abilities": {
+        "8": "Flying",
+        "9": "Haste",
+        "141673": "Discard a card: This creature gains lifelink until end of turn.",
+        "204465": "Whenever one or more cards leave your graveyard, put a +1/+1 counter on target creature you control."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "12": "Lifelink"
+      },
+      "id": 102653,
+      "image_url": "https://cards.scryfall.io/large/front/0/6/06c9e8a7-2840-4cff-90af-c6636e598f78.jpg?1775938346",
+      "layout": "standard",
+      "name": "Hardened Academic",
+      "rarity": "rare",
+      "types": [
+        "Creature - Bird Cleric"
+      ]
+    },
+    {
+      "abilities": {
+        "204478": "Molten Note deals damage to target creature equal to the amount of mana spent to cast this spell. Untap all creatures you control.",
+        "204479": "Flashback {o6oRoW}"
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "35": "Flashback"
+      },
+      "id": 102663,
+      "image_url": "https://cards.scryfall.io/large/front/5/0/506f69aa-7dc4-4dd7-990a-7371fc1762c0.jpg?1775938416",
+      "layout": "standard",
+      "name": "Molten Note",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "145374": "Flashback {o2oRoW}",
+        "204493": "You gain 2 life. You may discard a card. If you do, draw two cards."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "35": "Flashback"
+      },
+      "id": 102675,
+      "image_url": "https://cards.scryfall.io/large/front/4/5/4584d5f7-b1f1-4c8e-80c5-ad35e44a968e.jpg?1775938502",
+      "layout": "standard",
+      "name": "Pursue the Past",
+      "rarity": "common",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "145368": "Whenever one or more cards leave your graveyard, put a +1/+1 counter on this creature."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102689,
+      "image_url": "https://cards.scryfall.io/large/front/1/2/123f1fde-d8de-4640-baa1-bb3781713168.jpg?1775938605",
+      "layout": "standard",
+      "name": "Spirit Mascot",
+      "rarity": "common",
+      "types": [
+        "Creature - Spirit Ox"
+      ]
+    },
+    {
+      "abilities": {
+        "12": "Lifelink",
+        "14": "Trample",
+        "172275": "At the beginning of combat on your turn, exile up to one target card from a graveyard."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102692,
+      "image_url": "https://cards.scryfall.io/large/front/f/1/f143fd41-58c3-45a0-bef8-e9e4b4a502a5.jpg?1775938628",
+      "layout": "standard",
+      "name": "Startled Relic Sloth",
+      "rarity": "uncommon",
+      "types": [
+        "Creature - Sloth Beast"
+      ]
+    },
+    {
+      "abilities": {
+        "204523": "Create two 3/3 blue and red Elemental creature tokens with flying.",
+        "204524": "{o2}, Discard this card: Look at the top two cards of your library. Put one of them into your hand and the other into your graveyard."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "8": "Flying"
+      },
+      "id": 102701,
+      "image_url": "https://cards.scryfall.io/large/front/8/4/846a0e79-a530-429e-8f7f-4b87f1b0156e.jpg?1776000377",
+      "layout": "standard",
+      "name": "Visionary's Dance",
+      "rarity": "common",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "1001": "{oT}: Add {oW}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 102731,
+      "image_url": "https://cards.scryfall.io/large/front/d/8/d85d0f25-a24a-4de0-9b8b-93fb5017bce9.jpg?1775938910",
+      "layout": "standard",
+      "name": "Plains",
+      "rarity": "basic",
+      "types": [
+        "Basic Land - Plains"
+      ]
+    },
+    {
+      "abilities": {
+        "205471": "Target creature gets +1/+0 and gains double strike until end of turn."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {
+        "3": "Double strike"
+      },
+      "id": 104060,
+      "image_url": "https://cards.scryfall.io/large/front/6/2/62a47835-5719-48c4-a740-a0c5f00dce11.jpg?1775937102",
+      "layout": "prepare",
+      "name": "Twofold Intent",
+      "rarity": "uncommon",
+      "types": [
+        "Sorcery"
+      ]
+    },
+    {
+      "abilities": {
+        "2462": "Add {oRoRoRoRoR}."
+      },
+      "back_image_url": "",
+      "hidden_abilities": {},
+      "id": 104077,
+      "image_url": "https://cards.scryfall.io/large/front/3/b/3ba971e7-0b7a-4750-896f-7cf063e66b2a.jpg?1775937691",
+      "layout": "prepare",
+      "name": "Seething Song",
+      "rarity": "uncommon",
+      "types": [
+        "Instant"
+      ]
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 145368,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 172275,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204302,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204303,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204305,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204325,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204465,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204524,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    },
+    {
+      "abilities": {},
+      "back_image_url": null,
+      "hidden_abilities": {},
+      "id": 204550,
+      "image_url": "/static/card_back.jpg",
+      "layout": "standard",
+      "name": "Unknown",
+      "rarity": "basic",
+      "types": []
+    }
+  ],
+  "emblems": []
+}

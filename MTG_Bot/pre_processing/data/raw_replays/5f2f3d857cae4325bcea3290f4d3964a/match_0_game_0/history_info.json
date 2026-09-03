@@ -1,0 +1,716 @@
+{
+  "history_path": "20260422/a23cf55fa9a24b279eb6fa9ba26b1bf8",
+  "event_info": {
+    "id": "5f2f3d857cae4325bcea3290f4d3964a",
+    "expansion": "SOS",
+    "format": "PremierDraft",
+    "best_of_n": 1,
+    "trophy_win_count": 7,
+    "wins": 3,
+    "losses": 3,
+    "pool_link": "/pool/5f2f3d857cae4325bcea3290f4d3964a",
+    "deck_links": [
+      "/deck/5f2f3d857cae4325bcea3290f4d3964a/0",
+      "/deck/5f2f3d857cae4325bcea3290f4d3964a/1"
+    ],
+    "details_link": "/details/5f2f3d857cae4325bcea3290f4d3964a",
+    "streaming_enabled": true,
+    "draft_link": "/draft/5f2f3d857cae4325bcea3290f4d3964a",
+    "picks_link": "/picks/5f2f3d857cae4325bcea3290f4d3964a",
+    "deck_colors": "WRu"
+  },
+  "deck_build": {
+    "groups": [
+      {
+        "name": "Maindeck",
+        "cards": [
+          100651,
+          100651,
+          100651,
+          100651,
+          100651,
+          100651,
+          100651,
+          102469,
+          102471,
+          102473,
+          102476,
+          102486,
+          102487,
+          102488,
+          102567,
+          102573,
+          102577,
+          102577,
+          102578,
+          102585,
+          102596,
+          102640,
+          102640,
+          102663,
+          102675,
+          102675,
+          102689,
+          102689,
+          102701,
+          102702,
+          102714,
+          102721,
+          102721,
+          102731,
+          102731,
+          102731,
+          102731,
+          102731,
+          102731,
+          102731
+        ]
+      },
+      {
+        "name": "Sideboard",
+        "cards": [
+          102461,
+          102500,
+          102524,
+          102540,
+          102549,
+          102563,
+          102565,
+          102620,
+          102654,
+          102678,
+          102679,
+          102686,
+          102709,
+          102713,
+          102762
+        ]
+      }
+    ],
+    "cards": {
+      "102663": {
+        "id": 102663,
+        "name": "Molten Note",
+        "cmc": 2.0,
+        "color_identity": [
+          "W",
+          "R"
+        ],
+        "mana_cost": "{X}{R}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/5/0/506f69aa-7dc4-4dd7-990a-7371fc1762c0.jpg?1775938416",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102540": {
+        "id": 102540,
+        "name": "End of the Hunt",
+        "cmc": 2.0,
+        "color_identity": [
+          "B"
+        ],
+        "mana_cost": "{1}{B}",
+        "image_url": "https://cards.scryfall.io/large/front/0/8/0809b51a-6a05-4f18-9bf4-1b8382da648f.jpg?1775937476",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102675": {
+        "id": 102675,
+        "name": "Pursue the Past",
+        "cmc": 2.0,
+        "color_identity": [
+          "W",
+          "R"
+        ],
+        "mana_cost": "{R}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/4/5/4584d5f7-b1f1-4c8e-80c5-ad35e44a968e.jpg?1775938502",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102549": {
+        "id": 102549,
+        "name": "Melancholic Poet",
+        "cmc": 2.0,
+        "color_identity": [
+          "B"
+        ],
+        "mana_cost": "{1}{B}",
+        "image_url": "https://cards.scryfall.io/large/front/d/8/d8309815-7035-47a5-acf2-2b2ac1e65037.jpg?1775937538",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Elf Bard"
+        ],
+        "layout": "standard"
+      },
+      "102678": {
+        "id": 102678,
+        "name": "Rapturous Moment",
+        "cmc": 6.0,
+        "color_identity": [
+          "U",
+          "R"
+        ],
+        "mana_cost": "{4}{U}{R}",
+        "image_url": "https://cards.scryfall.io/large/front/2/1/21afe19d-881a-48cb-863e-22942bea5ebe.jpg?1775938524",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102679": {
+        "id": 102679,
+        "name": "Render Speechless",
+        "cmc": 4.0,
+        "color_identity": [
+          "W",
+          "B"
+        ],
+        "mana_cost": "{2}{W}{B}",
+        "image_url": "https://cards.scryfall.io/large/front/2/5/25bbb1c7-14e8-444f-ab98-e95f50927460.jpg?1775938531",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102686": {
+        "id": 102686,
+        "name": "Snooping Page",
+        "cmc": 3.0,
+        "color_identity": [
+          "W",
+          "B"
+        ],
+        "mana_cost": "{1}{W}{B}",
+        "image_url": "https://cards.scryfall.io/large/front/7/3/73d06987-8686-461b-b260-9a4fee6a3b32.jpg?1775938584",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Creature - Human Cleric"
+        ],
+        "layout": "standard"
+      },
+      "102689": {
+        "id": 102689,
+        "name": "Spirit Mascot",
+        "cmc": 2.0,
+        "color_identity": [
+          "W",
+          "R"
+        ],
+        "mana_cost": "{R}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/1/2/123f1fde-d8de-4640-baa1-bb3781713168.jpg?1775938605",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Spirit Ox"
+        ],
+        "layout": "standard"
+      },
+      "102563": {
+        "id": 102563,
+        "name": "Wander Off",
+        "cmc": 4.0,
+        "color_identity": [
+          "B"
+        ],
+        "mana_cost": "{3}{B}",
+        "image_url": "https://cards.scryfall.io/large/front/3/d/3d409512-50b9-4a38-91b0-19ba25227992.jpg?1775937643",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Instant"
+        ],
+        "layout": "standard"
+      },
+      "102565": {
+        "id": 102565,
+        "name": "Ancestral Anger",
+        "cmc": 1.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "{R}",
+        "image_url": "https://cards.scryfall.io/large/front/6/c/6c5a93d6-d4ab-4062-bb3c-1b5330bf15ad.jpg?1775937666",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102567": {
+        "id": 102567,
+        "name": "Artistic Process",
+        "cmc": 5.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "{3}{R}{R}",
+        "image_url": "https://cards.scryfall.io/large/front/b/c/bce9d933-be58-4301-beb4-07b04d0b69f0.jpg?1775937683",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "100651": {
+        "id": 100651,
+        "name": "Mountain",
+        "cmc": 0.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "",
+        "image_url": "https://cards.scryfall.io/large/front/0/2/021fa322-f38c-4d94-8122-5b13425106d9.jpg?1771345172",
+        "url_back": "",
+        "rarity": "basic",
+        "types": [
+          "Basic Land - Mountain"
+        ],
+        "layout": "standard"
+      },
+      "102573": {
+        "id": 102573,
+        "name": "Expressive Firedancer",
+        "cmc": 2.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "{1}{R}",
+        "image_url": "https://cards.scryfall.io/large/front/2/5/259b8c45-6241-4206-a34e-34c7f401f47b.jpg?1775937734",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Human Sorcerer"
+        ],
+        "layout": "standard"
+      },
+      "102701": {
+        "id": 102701,
+        "name": "Visionary's Dance",
+        "cmc": 7.0,
+        "color_identity": [
+          "U",
+          "R"
+        ],
+        "mana_cost": "{5}{U}{R}",
+        "image_url": "https://cards.scryfall.io/large/front/8/4/846a0e79-a530-429e-8f7f-4b87f1b0156e.jpg?1776000377",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102702": {
+        "id": 102702,
+        "name": "Wilt in the Heat",
+        "cmc": 4.0,
+        "color_identity": [
+          "W",
+          "R"
+        ],
+        "mana_cost": "{2}{R}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/f/6/f63f7209-fc0f-400c-8076-125f3131cb32.jpg?1775938697",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Instant"
+        ],
+        "layout": "standard"
+      },
+      "102577": {
+        "id": 102577,
+        "name": "Heated Argument",
+        "cmc": 5.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "{4}{R}",
+        "image_url": "https://cards.scryfall.io/large/front/0/0/0038d212-3d95-4f98-8c2e-7b2404d0ced7.jpg?1775937767",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Instant"
+        ],
+        "layout": "standard"
+      },
+      "102578": {
+        "id": 102578,
+        "name": "Impractical Joke",
+        "cmc": 1.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "{R}",
+        "image_url": "https://cards.scryfall.io/large/front/3/9/39a816b4-39b8-421c-b828-68db901d34b7.jpg?1775937777",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102709": {
+        "id": 102709,
+        "name": "Page, Loose Leaf",
+        "cmc": 2.0,
+        "color_identity": [],
+        "mana_cost": "{2}",
+        "image_url": "https://cards.scryfall.io/large/front/8/c/8c6fecfd-8241-4cf0-b1eb-19472b99e0ed.jpg?1775938744",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Legendary Artifact Creature - Construct"
+        ],
+        "layout": "standard"
+      },
+      "102585": {
+        "id": 102585,
+        "name": "Pigment Wrangler",
+        "cmc": 5.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "{4}{R}",
+        "image_url": "https://cards.scryfall.io/large/front/c/2/c2faf4cf-c4b6-4721-ac06-0e045dd9704a.jpg?1775937841",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Creature - Orc Sorcerer"
+        ],
+        "layout": "prepare"
+      },
+      "102714": {
+        "id": 102714,
+        "name": "Fields of Strife",
+        "cmc": 0.0,
+        "color_identity": [
+          "W",
+          "R"
+        ],
+        "mana_cost": "",
+        "image_url": "https://cards.scryfall.io/large/front/3/d/3dc7a4c3-c356-4fba-bea0-e8788da3eb57.jpg?1775938780",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Land"
+        ],
+        "layout": "standard"
+      },
+      "102713": {
+        "id": 102713,
+        "name": "Dreamroot Cascade",
+        "cmc": 0.0,
+        "color_identity": [
+          "U",
+          "G"
+        ],
+        "mana_cost": "",
+        "image_url": "https://cards.scryfall.io/large/front/e/f/ef662b92-5a7f-48c9-bcc1-14b55e091aef.jpg?1775938773",
+        "url_back": "",
+        "rarity": "rare",
+        "types": [
+          "Land"
+        ],
+        "layout": "standard"
+      },
+      "102461": {
+        "id": 102461,
+        "name": "Rancorous Archaic",
+        "cmc": 5.0,
+        "color_identity": [],
+        "mana_cost": "{5}",
+        "image_url": "https://cards.scryfall.io/large/front/2/5/2565e16a-ed31-4867-adb8-f1633d580397.jpg?1775936927",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Avatar"
+        ],
+        "layout": "standard"
+      },
+      "102721": {
+        "id": 102721,
+        "name": "Spectacle Summit",
+        "cmc": 0.0,
+        "color_identity": [
+          "U",
+          "R"
+        ],
+        "mana_cost": "",
+        "image_url": "https://cards.scryfall.io/large/front/a/0/a0a66f7b-eab4-45da-8895-c2c2c7eb05f8.jpg?1775938830",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Land"
+        ],
+        "layout": "standard"
+      },
+      "102596": {
+        "id": 102596,
+        "name": "Zealous Lorecaster",
+        "cmc": 6.0,
+        "color_identity": [
+          "R"
+        ],
+        "mana_cost": "{5}{R}",
+        "image_url": "https://cards.scryfall.io/large/front/3/6/36ab2130-9f21-4d30-873a-aa72d3d15fa8.jpg?1775937928",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Giant Sorcerer"
+        ],
+        "layout": "standard"
+      },
+      "102469": {
+        "id": 102469,
+        "name": "Dig Site Inventory",
+        "cmc": 1.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{W}",
+        "image_url": "https://cards.scryfall.io/large/front/e/5/e52464ee-df8b-41ec-af93-4b0eb004383e.jpg?1775936980",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102471": {
+        "id": 102471,
+        "name": "Elite Interceptor",
+        "cmc": 1.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{W}",
+        "image_url": "https://cards.scryfall.io/large/front/2/9/2970683e-e69c-42cb-a067-34abd56fb42b.jpg?1775936992",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Human Wizard"
+        ],
+        "layout": "prepare"
+      },
+      "102473": {
+        "id": 102473,
+        "name": "Ennis, Debate Moderator",
+        "cmc": 2.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{1}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/d/2/d2ef31b4-24fa-4443-9f05-c8e99c3522e5.jpg?1775937005",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Legendary Creature - Human Cleric"
+        ],
+        "layout": "standard"
+      },
+      "102731": {
+        "id": 102731,
+        "name": "Plains",
+        "cmc": 0.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "",
+        "image_url": "https://cards.scryfall.io/large/front/d/8/d85d0f25-a24a-4de0-9b8b-93fb5017bce9.jpg?1775938910",
+        "url_back": "",
+        "rarity": "basic",
+        "types": [
+          "Basic Land - Plains"
+        ],
+        "layout": "standard"
+      },
+      "102476": {
+        "id": 102476,
+        "name": "Group Project",
+        "cmc": 2.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{1}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/e/8/e8abc1eb-6225-4b18-8502-b5324b818aed.jpg?1775937026",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102486": {
+        "id": 102486,
+        "name": "Quill-Blade Laureate",
+        "cmc": 2.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{1}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/6/2/62a47835-5719-48c4-a740-a0c5f00dce11.jpg?1775937102",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Creature - Human Cleric"
+        ],
+        "layout": "prepare"
+      },
+      "102487": {
+        "id": 102487,
+        "name": "Rapier Wit",
+        "cmc": 2.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{1}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/9/7/97b50521-5a0f-4dbd-8e15-f0f0d059c258.jpg?1775937109",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Instant"
+        ],
+        "layout": "standard"
+      },
+      "102488": {
+        "id": 102488,
+        "name": "Rehearsed Debater",
+        "cmc": 3.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{2}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/f/c/fc6a1425-6733-42a2-94d9-605966398092.jpg?1775937116",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Djinn Bard"
+        ],
+        "layout": "standard"
+      },
+      "102620": {
+        "id": 102620,
+        "name": "Snarl Song",
+        "cmc": 6.0,
+        "color_identity": [
+          "G"
+        ],
+        "mana_cost": "{5}{G}",
+        "image_url": "https://cards.scryfall.io/large/front/f/c/fc4c7fa2-aebb-4636-9afd-f1010c923316.jpg?1775938101",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102500": {
+        "id": 102500,
+        "name": "Chase Inspiration",
+        "cmc": 1.0,
+        "color_identity": [
+          "U"
+        ],
+        "mana_cost": "{U}",
+        "image_url": "https://cards.scryfall.io/large/front/0/6/06f9f257-c7ef-44b7-8b2b-f038fba900af.jpg?1775937195",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Instant"
+        ],
+        "layout": "standard"
+      },
+      "102762": {
+        "id": 102762,
+        "name": "Requisition Raid",
+        "cmc": 1.0,
+        "color_identity": [
+          "W"
+        ],
+        "mana_cost": "{W}",
+        "image_url": "https://cards.scryfall.io/large/front/6/d/6d9efae9-365d-46c8-be92-d4a3038f0414.jpg?1775936425",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Sorcery"
+        ],
+        "layout": "standard"
+      },
+      "102640": {
+        "id": 102640,
+        "name": "Colossus of the Blood Age",
+        "cmc": 6.0,
+        "color_identity": [
+          "W",
+          "R"
+        ],
+        "mana_cost": "{4}{R}{W}",
+        "image_url": "https://cards.scryfall.io/large/front/b/f/bfa7f0a4-6b65-4e53-ba00-848df260d8e3.jpg?1775938248",
+        "url_back": "",
+        "rarity": "uncommon",
+        "types": [
+          "Artifact Creature - Construct"
+        ],
+        "layout": "standard"
+      },
+      "102524": {
+        "id": 102524,
+        "name": "Quick Study",
+        "cmc": 3.0,
+        "color_identity": [
+          "U"
+        ],
+        "mana_cost": "{2}{U}",
+        "image_url": "https://cards.scryfall.io/large/front/2/d/2d4f0bc7-da7c-4749-a24c-b01f3eb5860c.jpg?1775937363",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Instant"
+        ],
+        "layout": "standard"
+      },
+      "102654": {
+        "id": 102654,
+        "name": "Imperious Inkmage",
+        "cmc": 3.0,
+        "color_identity": [
+          "W",
+          "B"
+        ],
+        "mana_cost": "{1}{W}{B}",
+        "image_url": "https://cards.scryfall.io/large/front/d/5/d5df1c3f-2536-4476-b8cd-34b026c38366.jpg?1775938353",
+        "url_back": "",
+        "rarity": "common",
+        "types": [
+          "Creature - Orc Warlock"
+        ],
+        "layout": "standard"
+      }
+    },
+    "main_colors": "WR",
+    "splash_colors": "u",
+    "search_support": {
+      "search_disabled_reason": "deck_type_not_supported",
+      "statistic_generation_disabled_reason": "deck_type_not_supported"
+    }
+  }
+}
